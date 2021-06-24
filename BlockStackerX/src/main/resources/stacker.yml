@@ -1,0 +1,27 @@
+State: DRAFT
+Item:
+  Material: "IRON_BLOCK"
+  Name: "&d&lExample Stacker"
+  Glow: true
+  Lore:
+    - ""
+    - "&7Very cool block that can stack blocks!"
+HologramOffset: "0.5,1.7,0.5"
+ValueFormat: "&d&l{value}"
+MaxStorage: 1000
+
+TeamStacking: false
+AvailableBlocks:
+  - "DIAMOND_BLOCK"
+  - "EMERALD_BLOCK"
+  - "IRON_BLOCK"
+PickupItem:
+  Name: "&d&LExample Stacker"
+  Glowing: false
+  Lore:
+    - '&e&l========================='
+    - ''
+    - '&e&lContains&f&l {value} &e&lblocks'
+    - '&e&lOwned by &f&l{player}'
+    - ''
+    - '&e&l========================='

@@ -1,0 +1,7 @@
+name: ${plugin.name}
+version: ${project.version}
+main: ${main.class}
+api-version: 1.13
+softdepend: [BentoBox, HolographicDisplays]
+authors: [EpicGodMC]
+description: Block Stacking plugin for skyblock
