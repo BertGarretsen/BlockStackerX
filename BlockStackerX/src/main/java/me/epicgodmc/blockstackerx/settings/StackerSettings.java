@@ -7,16 +7,17 @@ import lombok.ToString;
 import me.epicgodmc.blockstackerx.util.ConfigItem;
 import me.epicgodmc.blockstackerx.util.Offset;
 import org.bukkit.inventory.ItemStack;
+import org.mineacademy.fo.FileUtil;
 import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.settings.YamlConfig;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @ToString
 @AllArgsConstructor
 public class StackerSettings extends YamlConfig {
-
 
 
     @Getter
@@ -96,6 +97,27 @@ public class StackerSettings extends YamlConfig {
         return item.buildAndClear();
     }
 
+    public StackerSettings setIdentifier(String identifier)
+    {
+        StackerRegister.getInstance().deleteSettings(this);
+        StackerSettings clone = StackerSettings.clone(identifier, this);
+        StackerRegister.getInstance().registerSettings(clone);
+        return clone;
+    }
+
+//    public void setIdentifier(String identifier) {
+//        this.identifier = identifier;
+//
+//        try {
+//            Path filePath = Paths.get(getFile().getPath());
+//            Files.move(filePath, filePath.resolveSibling(identifier + ".yml"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        reload();
+//    }
+
     public void setState(State state) {
         this.state = state;
         save("State", state);
@@ -137,14 +159,45 @@ public class StackerSettings extends YamlConfig {
     }
 
 
-    public enum State
+    public static StackerSettings clone(String identifier, StackerSettings old)
     {
+        StackerSettings stackerSettings = new StackerSettings(identifier);
+
+        stackerSettings.state = old.state;
+        stackerSettings.item = old.item;
+        stackerSettings.hologramOffset = old.hologramOffset;
+        stackerSettings.valueFormat = old.valueFormat;
+        stackerSettings.maxStorage = old.maxStorage;
+        stackerSettings.teamStacking = old.teamStacking;
+        stackerSettings.availableBlocks = old.availableBlocks;
+        stackerSettings.used = old.used;
+
+        return stackerSettings;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        StackerSettings that = (StackerSettings) o;
+
+        return Objects.equals(identifier, that.identifier);
+    }
+
+    @Override
+    public int hashCode() {
+        return identifier != null ? identifier.hashCode() : 0;
+    }
+
+    public enum State {
 
         ACTIVE,
         DRAFT
 
     }
-
 
 
 }

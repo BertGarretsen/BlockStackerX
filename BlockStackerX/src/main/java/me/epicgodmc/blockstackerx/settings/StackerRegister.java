@@ -16,6 +16,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class StackerRegister {
@@ -35,9 +36,28 @@ public class StackerRegister {
     private static List<StackerSettings> loadedSettings = new ArrayList<>();
 
 
-    public void addStacker(final StackerSettings stackerSettings) {
+    public void registerSettings(final StackerSettings stackerSettings) {
         loadedSettings.add(stackerSettings);
         stackerSettings.save();
+    }
+
+    public void unregisterSettings(final String id)
+    {
+        for (int i = 0; i < loadedSettings.size(); i++) {
+            StackerSettings current = loadedSettings.get(i);
+            if (current.getIdentifier().equalsIgnoreCase(id))
+            {
+                loadedSettings.remove(i);
+                break;
+            }
+        }
+    }
+
+
+    public void deleteSettings(final StackerSettings stackerSettings)
+    {
+        unregisterSettings(stackerSettings.getIdentifier());
+        stackerSettings.delete();
     }
 
     public StackerSettings getSettings(final String identifier) {

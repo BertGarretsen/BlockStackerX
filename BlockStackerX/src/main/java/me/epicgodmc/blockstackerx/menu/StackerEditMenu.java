@@ -1,11 +1,8 @@
 package me.epicgodmc.blockstackerx.menu;
 
-import me.epicgodmc.blockstackerx.conversation.StackerCreateConversation;
-import me.epicgodmc.blockstackerx.conversation.stacker.IdentifierPrompt;
+import me.epicgodmc.blockstackerx.conversation.stacker.IdentifierConversation;
+import me.epicgodmc.blockstackerx.conversation.stacker.OffsetConversation;
 import me.epicgodmc.blockstackerx.settings.StackerSettings;
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.mineacademy.fo.menu.Menu;
 import org.mineacademy.fo.menu.button.Button;
@@ -17,7 +14,7 @@ public class StackerEditMenu extends Menu {
 
     /*buttons
 
-    identifier
+
     hologram offset
     value format
     max storage
@@ -27,10 +24,13 @@ public class StackerEditMenu extends Menu {
 
      */
 
+
     private final Button idButton;
+    private final Button offsetButton;
 
     public StackerEditMenu(StackerSettings draft)
     {
+
         setTitle("&c&lEditing Stacker &7(("+draft.getIdentifier()+"))");
         setSize(9*4);
 
@@ -38,21 +38,30 @@ public class StackerEditMenu extends Menu {
         setSlotNumbersVisible();
         //
 
-        idButton = new ButtonConversation(new IdentifierPrompt(), ItemCreator.of(CompMaterial.INK_SAC,
+        idButton = new ButtonConversation(new IdentifierConversation(draft), ItemCreator.of(CompMaterial.INK_SAC,
                 "&c&lIdentifier",
                 "",
-                "&cexample: &7\"superstacker\"",
+                "&cExample: &7\"sponge_stacker\"",
                 "",
-                "&cValue: &7"+draft.getIdentifier()));
-
+                "&cValue: &7\""+draft.getIdentifier()+"\"",
+                "&7((Click to edit))"));
+        offsetButton = new ButtonConversation(new OffsetConversation(draft), ItemCreator.of(CompMaterial.COMPASS,
+                "&c&lOffset",
+                "",
+                "&cExample: &7\"0.5,1.7,0.5\"",
+                "",
+                "&cValues:",
+                "   &c&lX: &7"+draft.getHologramOffset().getX(),
+                "   &c&lY: &7"+draft.getHologramOffset().getY(),
+                "   &c&lZ: &7"+draft.getHologramOffset().getZ(),
+                "&7((Click to edit))"));
     }
 
     @Override
     public ItemStack getItemAt(int slot) {
-        if (slot == 9*1 + 1)
-        {
-            return idButton.getItem();
-        }
+        if (slot == 10) return idButton.getItem();
+        if (slot == 11) return offsetButton.getItem();
         return null;
     }
+
 }

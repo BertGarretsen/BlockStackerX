@@ -18,7 +18,7 @@ public class StackerListMenu extends MenuPagged<StackerSettings> {
 
     @Override
     protected ItemStack convertToItemStack(StackerSettings settings) {
-        return ItemCreator.of(settings.getDefaultMaterial(), "&c&l" + settings.getIdentifier(), "", "&cLeft-click &7to spawn new stacker", "&cRight-Click &7to edit stacker settings").build().make();
+        return ItemCreator.of(settings.getDefaultMaterial(), "&c&l" + settings.getIdentifier(), "", "&7((&cLeft-click &7to spawn new stacker&7))", "&7((&cRight-Click &7to edit stacker settings&7))").build().make();
     }
 
     @Override
@@ -33,4 +33,6 @@ public class StackerListMenu extends MenuPagged<StackerSettings> {
             new StackerEditMenu(settings).displayTo(player);
         }
     }
+
+
 }
