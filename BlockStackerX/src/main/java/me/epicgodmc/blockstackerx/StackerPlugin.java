@@ -41,7 +41,7 @@ public final class StackerPlugin extends SimplePlugin {
     private String getLogo()
     {
         List<String> logoLines = Arrays.asList(
-                "  ____  _            _     _____ _             _          __   __",
+                "   ____  _            _     _____ _             _          __   __",
                 " |  _ \\| |          | |   / ____| |           | |         \\ \\ / /",
                 " | |_) | | ___   ___| | _| (___ | |_ __ _  ___| | _____ _ _\\ V / ",
                 " |  _ <| |/ _ \\ / __| |/ /\\___ \\| __/ _` |/ __| |/ / _ | '__> <  ",

@@ -7,7 +7,9 @@ import lombok.ToString;
 import me.epicgodmc.blockstackerx.util.ConfigItem;
 import me.epicgodmc.blockstackerx.util.Offset;
 import org.bukkit.inventory.ItemStack;
+import org.mineacademy.fo.Common;
 import org.mineacademy.fo.FileUtil;
+import org.mineacademy.fo.ItemUtil;
 import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.settings.YamlConfig;
 
@@ -97,8 +99,7 @@ public class StackerSettings extends YamlConfig {
         return item.buildAndClear();
     }
 
-    public StackerSettings setIdentifier(String identifier)
-    {
+    public StackerSettings setIdentifier(String identifier) {
         StackerRegister.getInstance().deleteSettings(this);
         StackerSettings clone = StackerSettings.clone(identifier, this);
         StackerRegister.getInstance().registerSettings(clone);
@@ -148,6 +149,16 @@ public class StackerSettings extends YamlConfig {
         save("TeamStacking", teamStacking);
     }
 
+    public List<String> getAvailableBlockNames()
+    {
+        return Common.convert(availableBlocks, value -> ItemUtil.bountifyCapitalized(value.getMaterial()));
+    }
+
+    public void setAvailableBlocks(String[] array) {
+        List<CompMaterial> converted = Common.convert(array, value -> CompMaterial.fromString(value.trim()));
+        setAvailableBlocks(converted);
+    }
+
     public void setAvailableBlocks(List<CompMaterial> availableBlocks) {
         this.availableBlocks = availableBlocks;
         save("AvailableBlocks", availableBlocks);
@@ -158,9 +169,11 @@ public class StackerSettings extends YamlConfig {
         save("PickupItem", used.serialize());
     }
 
+    public String isTeamStackingFancy() {
+        return isTeamStacking() ? "&a&lTrue" : "&4&lFalse";
+    }
 
-    public static StackerSettings clone(String identifier, StackerSettings old)
-    {
+    public static StackerSettings clone(String identifier, StackerSettings old) {
         StackerSettings stackerSettings = new StackerSettings(identifier);
 
         stackerSettings.state = old.state;

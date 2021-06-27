@@ -6,6 +6,7 @@ import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mineacademy.fo.TabUtil;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.conversation.SimplePrompt;
 
@@ -20,7 +21,7 @@ public class MaxStorageConversation extends StackerConversation
 
     @Override
     protected Prompt getFirstPrompt() {
-        return null;
+        return new MaxStoragePrompt();
     }
 
     public class MaxStoragePrompt extends SimplePrompt {
@@ -28,7 +29,7 @@ public class MaxStorageConversation extends StackerConversation
 
         @Override
         protected String getPrompt(ConversationContext context) {
-            return "Pleas enter the maximum storage available for this stacker, e.g. \"500\"";
+            return "Please enter the maximum storage available for this stacker, e.g. \"500\"";
         }
 
         @Override
