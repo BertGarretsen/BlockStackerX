@@ -2,11 +2,13 @@ package me.epicgodmc.blockstackerx.util;
 
 import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
+import org.mineacademy.fo.remain.nbt.NBTCompound;
 import org.mineacademy.fo.remain.nbt.NBTItem;
 
 import java.util.Arrays;
 import java.util.Optional;
 
+@Getter
 public class StackerState
 {
 
@@ -16,9 +18,11 @@ public class StackerState
     public StackerState(ItemStack item)
     {
         NBTItem nbtItem = new NBTItem(item);
+        NBTCompound compound = nbtItem.getCompound("stacker_data");
+        if (compound == null) return;
 
-        this.id = nbtItem.getString("StackerIdentifier");
-        this.state = State.getByTag(nbtItem.getString("StackerState")).orElse(State.NEW);
+        this.id = compound.getString("StackerIdentifier");
+        this.state = State.getByTag(compound.getString("StackerState")).orElse(State.NEW);
     }
 
     @Getter

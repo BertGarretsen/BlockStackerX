@@ -8,9 +8,10 @@ import me.epicgodmc.blockstackerx.util.ConfigItem;
 import me.epicgodmc.blockstackerx.util.Offset;
 import org.bukkit.inventory.ItemStack;
 import org.mineacademy.fo.Common;
-import org.mineacademy.fo.FileUtil;
 import org.mineacademy.fo.ItemUtil;
 import org.mineacademy.fo.remain.CompMaterial;
+import org.mineacademy.fo.remain.nbt.NBTCompound;
+import org.mineacademy.fo.remain.nbt.NBTItem;
 import org.mineacademy.fo.settings.YamlConfig;
 
 import java.util.List;
@@ -94,9 +95,14 @@ public class StackerSettings extends YamlConfig {
         item.setPlaceholders(placeholders);
         item.setAmount(amount);
 
-        item.setTag("StackerIdentifier", this.identifier);
-        item.setTag("StackerState", "NEW");
-        return item.buildAndClear();
+        ItemStack build = item.buildAndClear();
+        NBTItem nbtItem = new NBTItem(build);
+
+        NBTCompound compound = nbtItem.addCompound("stacker_data");
+
+        compound.setString("StackerIdentifier", this.identifier);
+        compound.setString("StackerState", "NEW");
+        return nbtItem.getItem();
     }
 
     public StackerSettings setIdentifier(String identifier) {
@@ -105,19 +111,6 @@ public class StackerSettings extends YamlConfig {
         StackerRegister.getInstance().registerSettings(clone);
         return clone;
     }
-
-//    public void setIdentifier(String identifier) {
-//        this.identifier = identifier;
-//
-//        try {
-//            Path filePath = Paths.get(getFile().getPath());
-//            Files.move(filePath, filePath.resolveSibling(identifier + ".yml"));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        reload();
-//    }
 
     public void setState(State state) {
         this.state = state;

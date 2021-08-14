@@ -13,6 +13,8 @@ public class Localization extends SimpleLocalization
     public static class Stacker_Actions
     {
         public static String INVALID_BLOCK;
+        public static String STACKER_PLACED;
+        public static String STACKER_BROKEN;
         public static String MODIFY_DENY;
         public static String MATERIAL_CHOSEN;
         public static String BLOCK_ADDED;
@@ -23,12 +25,15 @@ public class Localization extends SimpleLocalization
         public static String ERROR;
         public static String MATERIAL_CONTAINS_NBT;
         public static String NO_ISLAND_FOUND;
+        public static String INVENTORY_INTERACT_FAILED;
 
         private static void init()
         {
             pathPrefix("Stacker_Actions");
 
             INVALID_BLOCK = getString("Invalid_Block");
+            STACKER_BROKEN = getString("Stacker_Broken");
+            STACKER_PLACED = getString("Stacker_Placed");
             MODIFY_DENY = getString("Modify_Deny");
             MATERIAL_CHOSEN = getString("Material_Chosen");
             BLOCK_ADDED = getString("Block_Added");
@@ -39,6 +44,7 @@ public class Localization extends SimpleLocalization
             ERROR = getString("Error");
             MATERIAL_CONTAINS_NBT = getString("Material_Contains_NBT");
             NO_ISLAND_FOUND = getString("No_Island_Found");
+            INVENTORY_INTERACT_FAILED = getString("Inventory_Interact_Failed");
 
         }
     }

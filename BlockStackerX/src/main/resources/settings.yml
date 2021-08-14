@@ -1,0 +1,6 @@
+# Please do not change this number as it might modify your configuration in unexpected ways.
+Version: 1
+
+# Prints helpful messages to the console on certain events to help debugging.
+# recommended to keep on false in production environments to avoid spam in your console
+Debug: true

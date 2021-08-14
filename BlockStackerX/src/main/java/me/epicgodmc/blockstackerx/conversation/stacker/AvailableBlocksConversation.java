@@ -47,10 +47,10 @@ public class AvailableBlocksConversation extends StackerConversation {
                     context.setSessionData("FAIL", "\"" + s + "\" could not be found");
                     return false;
                 }
-                if (!compMaterial.isMaterialAvailable()) {
-                    context.setSessionData("FAIL", "\"" + s + "\" is unavailable in this Minecraft version");
-                    return false;
-                }
+//                if (!compMaterial) {
+//                    context.setSessionData("FAIL", "\"" + s + "\" is unavailable in this Minecraft version");
+//                    return false;
+//                }
             }
             return true;
         }

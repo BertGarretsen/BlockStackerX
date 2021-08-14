@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.mineacademy.fo.Common;
-import org.mineacademy.fo.EntityUtil;
 import org.mineacademy.fo.menu.Menu;
 import org.mineacademy.fo.menu.button.Button;
 import org.mineacademy.fo.menu.button.ButtonConversation;
@@ -22,12 +21,6 @@ public class StackerEditMenu extends Menu {
     private final Button maxStorageButton;
     private final Button teamStackingButton;
     private final Button availableBlocksButton;
-    private final Button stackerItemButton;
-
-
-    /*
-    private final Button stackerUsedItemButton;
-*/
 
     public StackerEditMenu(StackerSettings draft) {
 
@@ -73,7 +66,7 @@ public class StackerEditMenu extends Menu {
                 "&7Above the stacker look?",
                 "&7((Value will be placed at {value}))",
                 "",
-                "&cValue: &7\"" + draft.getValueFormat().replace("{value}", "12321")+"&7\"",
+                "&cValue: &7\"" + draft.getValueFormat().replace("{value}", "12321") + "&7\"",
                 "&7((Click to edit))"));
         maxStorageButton = new ButtonConversation(new MaxStorageConversation(draft), ItemCreator.of(CompMaterial.BARRIER,
                 "&c&lMaximum-Storage",
@@ -120,18 +113,6 @@ public class StackerEditMenu extends Menu {
                 "",
                 "&cValues: &7" + Common.join(draft.getAvailableBlockNames(), "&c, &7"),
                 "&7((Click to toggle))"));
-
-        stackerItemButton = new Button() {
-            @Override
-            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-
-            }
-
-            @Override
-            public ItemStack getItem() {
-                return draft.getNewStacker();
-            }
-        };
     }
 
     @Override
