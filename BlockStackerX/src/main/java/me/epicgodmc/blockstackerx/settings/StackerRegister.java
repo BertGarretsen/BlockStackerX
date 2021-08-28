@@ -13,10 +13,7 @@ import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.remain.CompMaterial;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class StackerRegister {
@@ -53,6 +50,12 @@ public class StackerRegister {
         }
     }
 
+    public List<StackerSettings> getLoadedSettingsSorted()
+    {
+        List<StackerSettings> sorted = new ArrayList<>(loadedSettings);
+        Collections.sort(sorted);
+        return sorted;
+    }
 
     public void deleteSettings(final StackerSettings stackerSettings)
     {

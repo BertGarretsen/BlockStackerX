@@ -23,7 +23,7 @@ public class EditorCmd extends SimpleSubCommand {
         super(parent, sublabel);
 
         setDescription("Edit the settings of a specific stacker");
-        setUsage("[identifier]");
+        setUsage("[Identifier]");
     }
 
     @Override

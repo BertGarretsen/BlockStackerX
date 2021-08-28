@@ -17,11 +17,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
-public class ConfigItem
-{
+public class ConfigItem {
 
 
     private CompMaterial material;
@@ -35,18 +36,16 @@ public class ConfigItem
     private Map<String, Object> placeholders = new HashMap<>();
     private Map<String, String> tags = new HashMap<>();
 
-    public ConfigItem(SerializedMap map)
-    {
+    public ConfigItem(SerializedMap map) {
         this.material = map.getMaterial("Material", CompMaterial.DIRT);
         this.name = map.getString("Name", null);
         this.lore = map.getStringList("Lore", null);
         this.amount = map.getInteger("Amount", 1);
         this.enchanted = map.getBoolean("Glow", null);
-        this.metadata = map.getInteger("Metadata",0).shortValue();
+        this.metadata = map.getInteger("Metadata", 0).shortValue();
     }
 
-    public static ConfigItem of(ItemStack itemStack)
-    {
+    public static ConfigItem of(ItemStack itemStack) {
         ConfigItem configItem = new ConfigItem();
 
         configItem.material = CompMaterial.fromItem(itemStack);
@@ -66,47 +65,43 @@ public class ConfigItem
     }
 
 
-    public void setTag(String key, String value)
-    {
+    public void setTag(String key, String value) {
         this.tags.put(key, value);
     }
 
-    public void removeTag(String key)
-    {
+    public void removeTag(String key) {
         this.tags.remove(key);
     }
 
-    public void setPlaceholder(String key, Object value)
-    {
+    public void setPlaceholder(String key, Object value) {
         this.placeholders.put(key, value);
     }
 
-    public void removePlaceholder(String key)
-    {
+    public void removePlaceholder(String key) {
         this.placeholders.remove(key);
     }
 
-    public ItemStack buildAndClear()
-    {
+    public ItemStack buildAndClear() {
         ItemStack result = build();
         clean();
         return result;
     }
 
-    public ItemStack build()
-    {
-        ItemCreator.ItemCreatorBuilder creator = ItemCreator.of(material);
+    public ItemStack build() {
+        ItemCreator.ItemCreatorBuilder creator;
+        creator = ItemCreator.of(material);
 
-        String rname = this.name;
-        List<String> rlore = this.lore != null ? new ArrayList<>(this.lore) : null;
+        String rname = name;
+        List<String> rlore = new ArrayList<>(lore);
 
         if (!placeholders.isEmpty()) {
-            SerializedMap replacements = SerializedMap.of(placeholders);
-            if (rname != null) Replacer.replaceVariables(rname, replacements);
-            if (rlore != null) Replacer.replaceVariables(rlore, replacements);
+            for (String var : placeholders.keySet()) {
+                String variable = String.format("{%s}", var);
+                rname = rname.replace(variable, placeholders.get(var).toString());
+                rlore = rlore.stream().map(s -> s.replace(variable, placeholders.get(var).toString())).collect(Collectors.toList());
+            }
         }
-        if (!tags.isEmpty())
-        {
+        if (!tags.isEmpty()) {
             creator.tags(this.tags);
         }
 
@@ -119,8 +114,7 @@ public class ConfigItem
         return creator.build().make();
     }
 
-    public SerializedMap serialize()
-    {
+    public SerializedMap serialize() {
         SerializedMap map = new SerializedMap();
 
         map.putIfExist("Material", material);
@@ -133,8 +127,7 @@ public class ConfigItem
         return map;
     }
 
-    public void clean()
-    {
+    public void clean() {
         this.amount = 1;
         this.placeholders.clear();
         this.tags.clear();

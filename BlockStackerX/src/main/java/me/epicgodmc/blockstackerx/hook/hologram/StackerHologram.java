@@ -1,6 +1,7 @@
 package me.epicgodmc.blockstackerx.hook.hologram;
 
 import org.bukkit.Location;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.mineacademy.fo.Common;
 
 public class StackerHologram {
@@ -17,8 +18,17 @@ public class StackerHologram {
 
 
     public void create(int value, Location location) {
-        this.hologram = hookInstance.createHologram(location, Common.toList(format.replace("{value}", String.valueOf(value))));
+        Common.runLater(new BukkitRunnable() {
+            Object hologram;
+
+            @Override
+            public void run() {
+                hologram = hookInstance.createHologram(location, Common.toList(format.replace("{value}", String.valueOf(value))));
+                StackerHologram.this.hologram = hologram;
+            }
+        });
     }
+
 
     public void update(int value) {
         this.update(0, format.replace("{value}", String.valueOf(value)));

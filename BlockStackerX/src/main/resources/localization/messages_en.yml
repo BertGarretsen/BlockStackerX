@@ -3,6 +3,7 @@ Player:
   Not_Online: "&cPlayer {player} &cis not online on this server."
 
 Stacker_Actions:
+  Stacker_Broken_No_Pickaxe: "You need to hold a pickaxe to break this stacker!"
   Stacker_Placed: "Stacker Placed!"
   Stacker_Broken: "Stacker Broken!"
   Inventory_Interact_Failed: "You failed to interact with a valid block in under 10 seconds"

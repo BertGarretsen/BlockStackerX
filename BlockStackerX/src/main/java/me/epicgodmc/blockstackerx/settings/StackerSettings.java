@@ -4,12 +4,15 @@ import com.google.common.collect.Maps;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
+import me.epicgodmc.blockstackerx.StackerBlock;
 import me.epicgodmc.blockstackerx.util.ConfigItem;
 import me.epicgodmc.blockstackerx.util.Offset;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.ItemUtil;
 import org.mineacademy.fo.remain.CompMaterial;
+import org.mineacademy.fo.remain.Remain;
 import org.mineacademy.fo.remain.nbt.NBTCompound;
 import org.mineacademy.fo.remain.nbt.NBTItem;
 import org.mineacademy.fo.settings.YamlConfig;
@@ -20,7 +23,7 @@ import java.util.Objects;
 
 @ToString
 @AllArgsConstructor
-public class StackerSettings extends YamlConfig {
+public class StackerSettings extends YamlConfig implements Comparable<StackerSettings> {
 
 
     @Getter
@@ -52,7 +55,7 @@ public class StackerSettings extends YamlConfig {
                 "to preserve the documentation comments for this file. I apologize", "",
                 "If you'd like to view the default file, you can either:",
                 "a) Open the plugin Jar with WinRar or similar program",
-                "b) View the file on github "/*TODO add link*/);
+                "b) View the file on github https://github.com/BertGarretsen/BlockStackerX/blob/master/BlockStackerX/src/main/resources/stacker.yml");
     }
 
 
@@ -77,10 +80,26 @@ public class StackerSettings extends YamlConfig {
     }
 
 
+    public ItemStack getUsedStacker(StackerBlock stackerBlock)
+    {
+        used.setPlaceholder("value", stackerBlock.getValue());
+        used.setPlaceholder("player", Remain.getPlayerByUUID(stackerBlock.getOwner()).getName());
+        used.setMaterial(stackerBlock.getStackMaterial());
+        used.setAmount(1);
+
+        ItemStack build = used.buildAndClear();
+        NBTItem nbtItem = new NBTItem(build);
+
+        NBTCompound compound = nbtItem.addCompound("stacker_data");
+        compound.setString("StackerIdentifier", this.identifier);
+        compound.setString("StackerState", "USED");
+        compound.setInteger("Value", stackerBlock.getValue());
+        return nbtItem.getItem();
+    }
+
     public ItemStack getNewStacker() {
         return getNewStacker(1);
     }
-
 
     public ItemStack getNewStacker(int amount) {
         return getNewStacker(Maps.newHashMap(), amount);
@@ -196,6 +215,13 @@ public class StackerSettings extends YamlConfig {
     @Override
     public int hashCode() {
         return identifier != null ? identifier.hashCode() : 0;
+    }
+
+    @Override
+    public int compareTo(@NotNull StackerSettings o) {
+        boolean thisActive = this.getState() == State.ACTIVE;
+        boolean otherActive = o.getState() == State.ACTIVE;
+        return Boolean.compare(otherActive, thisActive);
     }
 
     public enum State {

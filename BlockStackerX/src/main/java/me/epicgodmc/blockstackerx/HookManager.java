@@ -67,9 +67,9 @@ public class HookManager
         return new StackerHologram(hologramHook, format);
     }
 
-    public UUID getIslandID(Player player)
+    public String getIslandID(Player player)
     {
-        return UUID.fromString(this.skyblockHook.getIslandId(player));
+        return this.skyblockHook.getIslandId(player);
     }
 
     public boolean canModifyStacker(Player player, StackerBlock stacker)

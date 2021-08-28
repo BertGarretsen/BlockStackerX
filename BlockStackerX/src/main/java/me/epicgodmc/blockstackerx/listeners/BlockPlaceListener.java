@@ -45,7 +45,7 @@ public class BlockPlaceListener implements Listener {
             StackerSettings settings = StackerRegister.getInstance().getSettings(state.getId());
             Valid.checkNotNull(settings, "XStacker object is null");
 
-            StackerBlock b = new StackerBlock(player.getUniqueId(), state.getId(), new SimpleLocation(block.getLocation()));
+            StackerBlock b = new StackerBlock(player.getUniqueId(), state.getId(), new SimpleLocation(block.getWorld().getName(), block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ()));
             islandCache.addStacker(b);
             Common.tell(e.getPlayer(), Localization.Stacker_Actions.STACKER_PLACED);
         }

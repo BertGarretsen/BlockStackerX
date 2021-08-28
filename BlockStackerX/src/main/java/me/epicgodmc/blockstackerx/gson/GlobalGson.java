@@ -4,6 +4,8 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import me.epicgodmc.blockstackerx.StackerBlock;
+import me.epicgodmc.blockstackerx.storage.IslandCache;
 import org.mineacademy.fo.collection.StrictCollection;
 
 import java.lang.reflect.Modifier;
@@ -15,6 +17,8 @@ import java.lang.reflect.Modifier;
 public class GlobalGson {
 
     private static GsonBuilder BUILDER = new GsonBuilder()
+            .registerTypeAdapter(IslandCache.class, new IslandCacheTypeAdapter())
+            .registerTypeAdapter(StackerBlock.class, new StackerBlockTypeAdapter())
             .setExclusionStrategies(new ExclusionStrategy() {
                 @Override
                 public boolean shouldSkipField(FieldAttributes f) {

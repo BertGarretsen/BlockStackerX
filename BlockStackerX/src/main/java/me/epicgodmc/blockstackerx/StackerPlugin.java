@@ -7,6 +7,7 @@ import me.epicgodmc.blockstackerx.listeners.BlockPlaceListener;
 import me.epicgodmc.blockstackerx.settings.Localization;
 import me.epicgodmc.blockstackerx.settings.Settings;
 import me.epicgodmc.blockstackerx.settings.StackerRegister;
+import me.epicgodmc.blockstackerx.storage.IslandCache;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.mineacademy.fo.Common;
@@ -30,6 +31,10 @@ public final class StackerPlugin extends SimplePlugin {
 
     @Override
     protected void onPluginStart() {
+        Common.ADD_LOG_PREFIX = true;
+        Common.ADD_TELL_PREFIX = true;
+        Common.setLogPrefix("[BlockStackerX]");
+
         long time = System.currentTimeMillis();
         instance = this;
         Common.logNoPrefix(Common.configLine());
@@ -38,8 +43,8 @@ public final class StackerPlugin extends SimplePlugin {
         if (this.hookManager.verify()) {
 
 
+            registerCommands();
             registerListeners();
-            registerCommands("blockstackerx|bs", new BlockStackerCmdGroup());
             StackerRegister.getInstance().loadSettingFiles();
 
 
@@ -51,6 +56,20 @@ public final class StackerPlugin extends SimplePlugin {
         Common.logNoPrefix(Common.configLine());
     }
 
+    @Override
+    protected void onPluginStop() {
+        if (shutdown) return;
+
+        IslandCache.saveAll();
+    }
+
+    @Override
+    protected void onPluginReload() {
+        IslandCache.saveAndUnloadAll();
+
+        registerCommands();
+        StackerRegister.getInstance().loadSettingFiles();
+    }
 
     private void registerListeners()
     {
@@ -58,12 +77,11 @@ public final class StackerPlugin extends SimplePlugin {
         registerEvents(new BlockBreakListener(this));
     }
 
-    @Override
-    protected void onPluginStop() {
-        if (shutdown) return;
-
-
+    private void registerCommands()
+    {
+        registerCommands("blockstackerx|bs", new BlockStackerCmdGroup());
     }
+
 
     @Override
     public List<Class<? extends YamlStaticConfig>> getSettings() {
@@ -72,7 +90,7 @@ public final class StackerPlugin extends SimplePlugin {
 
     private String getLogo() {
         List<String> logoLines = Arrays.asList(
-                "   ____  _            _     _____ _             _          __   __",
+                "  _____  _            _     _____ _             _          __   __",
                 " |  _ \\| |          | |   / ____| |           | |         \\ \\ / /",
                 " | |_) | | ___   ___| | _| (___ | |_ __ _  ___| | _____ _ _\\ V / ",
                 " |  _ <| |/ _ \\ / __| |/ /\\___ \\| __/ _` |/ __| |/ / _ | '__> <  ",

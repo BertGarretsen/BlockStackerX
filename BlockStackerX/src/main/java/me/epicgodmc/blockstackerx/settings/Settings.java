@@ -20,7 +20,7 @@ public class Settings extends SimpleSettings
 
     private static void init()
     {
-        DEBUG = getBoolean("Debug");
+        DEBUG = getBoolean("DebugMessages");
 
     }
 

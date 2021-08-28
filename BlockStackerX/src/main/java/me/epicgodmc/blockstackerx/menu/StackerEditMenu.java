@@ -1,6 +1,7 @@
 package me.epicgodmc.blockstackerx.menu;
 
 import me.epicgodmc.blockstackerx.conversation.stacker.*;
+import me.epicgodmc.blockstackerx.menu.common.DecorationButton;
 import me.epicgodmc.blockstackerx.settings.StackerSettings;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -21,10 +22,13 @@ public class StackerEditMenu extends Menu {
     private final Button maxStorageButton;
     private final Button teamStackingButton;
     private final Button availableBlocksButton;
+    private final Button physicalExample;
+
+    private final Button finishButton;
 
     public StackerEditMenu(StackerSettings draft) {
 
-        setTitle("&c&lEditing Stacker &7((" + draft.getIdentifier() + "))");
+        setTitle("&c&lEditing Stacker &8((&7" + draft.getIdentifier() + "&8))");
         setSize(9 * 5);
 
         //temp
@@ -113,6 +117,42 @@ public class StackerEditMenu extends Menu {
                 "",
                 "&cValues: &7" + Common.join(draft.getAvailableBlockNames(), "&c, &7"),
                 "&7((Click to toggle))"));
+        physicalExample = new DecorationButton() {
+            @Override
+            public ItemStack getItem() {
+                return draft.getNewStacker();
+            }
+        };
+
+        finishButton = new Button() {
+            @Override
+            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+                if (draft.getState() == StackerSettings.State.ACTIVE)
+                {
+                    draft.setState(StackerSettings.State.DRAFT);
+                }else{
+                    draft.setState(StackerSettings.State.ACTIVE);
+                }
+                redraw();
+            }
+
+            @Override
+            public ItemStack getItem() {
+                if (draft.getState() == StackerSettings.State.ACTIVE) {
+                    return ItemCreator.of(CompMaterial.RED_WOOL,
+                            "&c&lToggle State",
+                            "",
+                            "&cInformation",
+                            "&7Click this to mark this stacker as a &c&lDraft").build().make();
+                } else {
+                    return ItemCreator.of(CompMaterial.GREEN_WOOL,
+                            "&a&lToggle State",
+                            "",
+                            "&cInformation",
+                            "&7Click this to mark this stacker as &a&lComplete").build().make();
+                }
+            }
+        };
     }
 
     @Override
@@ -120,9 +160,11 @@ public class StackerEditMenu extends Menu {
         if (slot == 10) return idButton.getItem();
         if (slot == 11) return offsetButton.getItem();
         if (slot == 12) return valueButton.getItem();
-        if (slot == 13) return maxStorageButton.getItem();
-        if (slot == 14) return teamStackingButton.getItem();
-        if (slot == 15) return availableBlocksButton.getItem();
+        if (slot == 14) return maxStorageButton.getItem();
+        if (slot == 15) return teamStackingButton.getItem();
+        if (slot == 16) return availableBlocksButton.getItem();
+        if (slot == 22) return physicalExample.getItem();
+        if (slot == 40) return finishButton.getItem();
         return null;
     }
 

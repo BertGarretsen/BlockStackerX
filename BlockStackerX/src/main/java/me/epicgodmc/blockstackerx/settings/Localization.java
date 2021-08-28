@@ -26,6 +26,7 @@ public class Localization extends SimpleLocalization
         public static String MATERIAL_CONTAINS_NBT;
         public static String NO_ISLAND_FOUND;
         public static String INVENTORY_INTERACT_FAILED;
+        public static String STACKER_BREAK_NO_PICKAXE;
 
         private static void init()
         {
@@ -45,6 +46,7 @@ public class Localization extends SimpleLocalization
             MATERIAL_CONTAINS_NBT = getString("Material_Contains_NBT");
             NO_ISLAND_FOUND = getString("No_Island_Found");
             INVENTORY_INTERACT_FAILED = getString("Inventory_Interact_Failed");
+            STACKER_BREAK_NO_PICKAXE = getString("Stacker_Broken_No_Pickaxe");
 
         }
     }

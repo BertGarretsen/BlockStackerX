@@ -2,10 +2,12 @@ package me.epicgodmc.blockstackerx.conversation.stacker;
 
 import me.epicgodmc.blockstackerx.conversation.StackerConversation;
 import me.epicgodmc.blockstackerx.settings.StackerSettings;
+import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mineacademy.fo.conversation.SimpleConversation;
 import org.mineacademy.fo.conversation.SimplePrompt;
 
 public class ValueFormatConversation extends StackerConversation {
@@ -25,7 +27,7 @@ public class ValueFormatConversation extends StackerConversation {
 
         @Override
         protected String getPrompt(ConversationContext context) {
-            return "Please enter a &6value format&7, e.g. \"Value: {value}\"";
+            return "Please enter a value format, e.g. \"Value: {value}\"";
         }
 
         @Override
@@ -36,6 +38,11 @@ public class ValueFormatConversation extends StackerConversation {
         @Override
         protected String getFailedValidationText(ConversationContext context, String invalidInput) {
             return "Format must contain \"{value}\"";
+        }
+
+        @Override
+        public void onConversationEnd(SimpleConversation conversation, ConversationAbandonedEvent event) {
+            System.out.println(event.gracefulExit());
         }
 
         @Override

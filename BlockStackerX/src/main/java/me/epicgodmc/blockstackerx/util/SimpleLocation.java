@@ -14,7 +14,7 @@ import java.util.Objects;
 
 public class SimpleLocation {
 
-    private String worldName;
+    private String world;
     private double x;
     private double y;
     private double z;
@@ -22,7 +22,7 @@ public class SimpleLocation {
     private transient Location location = null;
 
     public SimpleLocation(final String worldName, final double x, final double y, final double z) {
-        this.worldName = worldName;
+        this.world = worldName;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -73,7 +73,7 @@ public class SimpleLocation {
     // change the Location
     private void setLocation(Location loc, boolean block) {
         this.location = loc;
-        this.worldName = loc.getWorld().getName();
+        this.world = loc.getWorld().getName();
         if (block) {
             this.x = loc.getBlockX();
             this.y = loc.getBlockY();
@@ -94,7 +94,7 @@ public class SimpleLocation {
         }
 
         // get World; hopefully it's initialized at this point
-        World world = Bukkit.getWorld(worldName);
+        World world = Bukkit.getWorld(this.world);
         if (world == null) {
             return;
         }
@@ -125,8 +125,8 @@ public class SimpleLocation {
         return this;
     }
 
-    public final String getWorldName() {
-        return worldName;
+    public final String getWorld() {
+        return world;
     }
 
     public final double getX() {
@@ -155,7 +155,7 @@ public class SimpleLocation {
 
     public SimpleLocation getRelative(BlockFace face, int distance) {
         Objects.requireNonNull(face, "face");
-        return SimpleLocation.of(this.worldName, this.x + face.getModX() * distance, this.y + face.getModY() * distance, this.z + face.getModZ() * distance);
+        return SimpleLocation.of(this.world, this.x + face.getModX() * distance, this.y + face.getModY() * distance, this.z + face.getModZ() * distance);
     }
 
     public double length() {
@@ -173,9 +173,9 @@ public class SimpleLocation {
     public double distanceSquared(SimpleLocation o) {
         if (o == null) {
             throw new IllegalArgumentException("Cannot measure distance to a null location");
-        } else if (o.getWorldName() != null && this.getWorldName() != null) {
-            if (!o.getWorldName().equals(this.getWorldName())) {
-                throw new IllegalArgumentException("Cannot measure distance between " + this.getWorldName() + " and " + o.getWorldName());
+        } else if (o.getWorld() != null && this.getWorld() != null) {
+            if (!o.getWorld().equals(this.getWorld())) {
+                throw new IllegalArgumentException("Cannot measure distance between " + this.getWorld() + " and " + o.getWorld());
             } else {
                 return NumberConversions.square(this.x - o.x) + NumberConversions.square(this.y - o.y) + NumberConversions.square(this.z - o.z);
             }
@@ -216,7 +216,7 @@ public class SimpleLocation {
         return Double.compare(this.getX(), other.getX()) == 0 &&
                 Double.compare(this.getY(), other.getY()) == 0 &&
                 Double.compare(this.getZ(), other.getZ()) == 0 &&
-                this.getWorldName().equals(other.getWorldName());
+                this.getWorld().equals(other.getWorld());
     }
 
     @Override
@@ -231,13 +231,13 @@ public class SimpleLocation {
         result = result * PRIME + (int) (x >>> 32 ^ x);
         result = result * PRIME + (int) (y >>> 32 ^ y);
         result = result * PRIME + (int) (z >>> 32 ^ z);
-        result = result * PRIME + this.getWorldName().hashCode();
+        result = result * PRIME + this.getWorld().hashCode();
         return result;
     }
 
     @Override
     public String toString() {
-        return getWorldName() + "," + getX() + "," + getY() + "," + getZ();
+        return getWorld() + "," + getX() + "," + getY() + "," + getZ();
     }
 
 }

@@ -3,4 +3,9 @@ Version: 1
 
 # Prints helpful messages to the console on certain events to help debugging.
 # recommended to keep on false in production environments to avoid spam in your console
-Debug: true
+DebugMessages: true
+
+# Select your locale from the localization folder
+Locale: "en"
+
+Prefix: "&6&lBlockStackerX &7"

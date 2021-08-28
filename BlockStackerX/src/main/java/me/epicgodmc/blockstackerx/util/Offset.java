@@ -48,11 +48,11 @@ public class Offset {
     }
 
     public Location calc(Location origin) {
-        return origin.add(this.x, this.y, this.z);
+        return origin.clone().add(this.x, this.y, this.z);
     }
 
     public Location calc(SimpleLocation simpleLocation) {
-        return simpleLocation.add(this.x, this.y, this.z).getLocation();
+        return simpleLocation.getLocation().add(this.x, this.y, this.z);
     }
 
     public boolean isValid() {
