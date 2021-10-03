@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import me.epicgodmc.blockstackerx.storage.IslandCache;
 import me.epicgodmc.blockstackerx.util.ConfigItem;
 import me.epicgodmc.blockstackerx.util.Offset;
 import org.bukkit.inventory.ItemStack;
@@ -56,6 +57,14 @@ public class StackerRegister {
         Collections.sort(sorted);
         return sorted;
     }
+
+    public void deleteSettings(final String id)
+    {
+        StackerSettings settings = getSettings(id);
+        unregisterSettings(id);
+        settings.delete();
+    }
+
 
     public void deleteSettings(final StackerSettings stackerSettings)
     {

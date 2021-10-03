@@ -25,3 +25,51 @@ PickupItem:
     - '&e&lOwned by &f&l{player}'
     - ''
     - '&e&l========================='
+
+Gui:
+  Title: "&d&lExample Stacker"
+  Rows: 3
+  Buttons:
+    Pickup:
+      Enabled: true
+      Name: "&d&LPick-Up"
+      Material: "CHEST"
+      Lore:
+        - ''
+        - '&7(( Click to pickup this stacker ))'
+      Slot: 11
+    Information:
+      Enabled: true
+      Name: "&d&lInformation"
+      Material: "BOOK"
+      Lore:
+        - ''
+        - '&7Owned by: &d{owner}'
+        - '&7BlockCount: &d{value}'
+        - '&7Level Value: &d{levels}'
+        - '&7Material Value: &d{matvalue}'
+      Slot: 12
+    DepositAll:
+      Enabled: true
+      Name: "&d&lDeposit All"
+      Material: "DIAMOND_BLOCK"
+      Lore:
+        - ''
+        - '&7(( Click to deposit all matching blocks from your inventory into stacker ))'
+      Slot: 13
+    WithdrawAll:
+      Enabled: true
+      Name: "&d&lWithdraw All"
+      Material: "IRON_BLOCK"
+      Lore:
+        - ''
+        - '(( Click to withdraw as many blocks as possible ))'
+      Slot: 14
+    Permissions:
+      Enabled: true
+      Name: "&d&lPermission settings"
+      Material: "DIAMOND_SWORD"
+      Lore:
+        - ''
+        - '(( Click to open the permissions of this stacker ))'
+      Slot: 15

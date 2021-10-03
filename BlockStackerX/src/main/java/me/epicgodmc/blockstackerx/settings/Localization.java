@@ -27,6 +27,10 @@ public class Localization extends SimpleLocalization
         public static String NO_ISLAND_FOUND;
         public static String INVENTORY_INTERACT_FAILED;
         public static String STACKER_BREAK_NO_PICKAXE;
+        public static String NO_BLOCK_IN_HAND;
+        public static String NO_TYPE_FOUND;
+        public static String STACKERTYPE_BROKEN;
+        public static String STACKER_NO_PERMISSION;
 
         private static void init()
         {
@@ -47,6 +51,10 @@ public class Localization extends SimpleLocalization
             NO_ISLAND_FOUND = getString("No_Island_Found");
             INVENTORY_INTERACT_FAILED = getString("Inventory_Interact_Failed");
             STACKER_BREAK_NO_PICKAXE = getString("Stacker_Broken_No_Pickaxe");
+            NO_BLOCK_IN_HAND = getString("No_Block_In_Hand");
+            NO_TYPE_FOUND = getString("No_Type_Found");
+            STACKERTYPE_BROKEN = getString("StackerType_Broken");
+            STACKER_NO_PERMISSION = getString("Stacker_No_Permission");
 
         }
     }

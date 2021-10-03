@@ -1,19 +1,83 @@
 package me.epicgodmc.blockstackerx.hook.skyblock;
 
-import me.epicgodmc.blockstackerx.StackerBlock;
+import me.epicgodmc.blockstackerx.stacker.StackerBlock;
+import me.epicgodmc.blockstackerx.StackerPlugin;
 import me.epicgodmc.blockstackerx.settings.StackerRegister;
+import me.epicgodmc.blockstackerx.storage.IslandCache;
+import me.epicgodmc.blockstackerx.util.StackerLocation;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.world.WorldLoadEvent;
 import org.mineacademy.fo.PlayerUtil;
+import org.mineacademy.fo.collection.StrictMap;
 import org.mineacademy.fo.remain.Remain;
 import world.bentobox.bentobox.BentoBox;
+import world.bentobox.bentobox.api.addons.Addon;
+import world.bentobox.bentobox.api.addons.GameModeAddon;
+import world.bentobox.bentobox.api.events.BentoBoxEvent;
 import world.bentobox.bentobox.database.objects.Island;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public final class BentoBox_Hook implements SkyblockHook {
+public final class BentoBox_Hook implements SkyblockHook, Listener {
+
+
+    private String addonName;
+    private UUID cachedWorld;
+    //private World world;
+
+    public BentoBox_Hook(String addon) {
+        this.addonName = addon;
+        StackerPlugin.getInstance().registerListener(this);
+    }
+
+
+    @EventHandler
+    public void onLevelCalculate(BentoBoxEvent e) {
+        Map<String, Object> keyValues = e.getKeyValues();
+        if ("IslandLevelCalculatedEvent".equals(e.getEventName()))
+        {
+            Island island = (Island) keyValues.get("island");
+            long level = (long) keyValues.get("level");
+            IslandCache islandCache = IslandCache.getCache(island.getUniqueId());
+
+            Collection<StackerBlock> stackers = islandCache.getStackers().values();
+
+            for (StackerBlock stacker : stackers) {
+                if (stacker.hasStackMaterial())
+                {
+                    double stackerLevels = stacker.calculateLevels();
+                    level += stackerLevels;
+                }
+            }
+            keyValues.put("level", level);
+            e.setKeyValues(keyValues);
+        }
+    }
+
+
+//    @EventHandler
+//    public void onWorldLoad(WorldLoadEvent e) {
+//        Optional<Addon> addon = BentoBox.getInstance().getAddonsManager().getAddonByName(addonName);
+//        addon.ifPresent((gm) ->
+//        {
+//            StackerPlugin.sendDebug("Found Addon: "+gm.getDescription().getName());
+//            StackerPlugin.sendDebug("Checking world");
+//            if (((GameModeAddon) gm).getOverWorld() != null) {
+//                StackerPlugin.sendDebug("Overworld: true");
+//                StackerPlugin.sendDebug("WorldName: "+((GameModeAddon)gm).getOverWorld().getName());
+//                this.world = ((GameModeAddon) gm).getOverWorld();
+//                StackerPlugin.sendDebug("Loaded Bentobox overworld");
+//                WorldLoadEvent.getHandlerList().unregister(this);
+//            }
+//        });
+//    }
 
 
     @Override
@@ -26,21 +90,21 @@ public final class BentoBox_Hook implements SkyblockHook {
     }
 
     @Override
-    public boolean hasSameTeam(World world, UUID player1, UUID player2) {
-        return getTeam(world, player1).contains(player2);
+    public boolean hasSameTeam(UUID player1, UUID player2) {
+        return getTeam(getWorld(), player1).contains(player2);
     }
 
     @Override
     public boolean canModifyStacker(StackerBlock stackerBlock, Player player) {
         return stackerBlock.getOwner().equals(player.getUniqueId())
                 || StackerRegister.getInstance().getSettings(stackerBlock.getIdentifier()).isTeamStacking()
-                && this.hasSameTeam(stackerBlock.getSimpleLocation().getLocation().getWorld(), stackerBlock.getOwner(), player.getUniqueId())
+                && this.hasSameTeam(stackerBlock.getOwner(), player.getUniqueId())
                 || PlayerUtil.hasPerm(player, "blockstackerx.stacker.bypass");
     }
 
     @Override
     public boolean isLastOnline(Player player) {
-        Collection<UUID> team = getTeam(player.getWorld(), player.getUniqueId());
+        Collection<UUID> team = getTeam(getWorld(), player.getUniqueId());
         int onlineCount = 0;
 
         for (UUID uuid : team) {
@@ -50,15 +114,32 @@ public final class BentoBox_Hook implements SkyblockHook {
     }
 
     @Override
-    public boolean hasIsland(Player player) {
+    public boolean hasIsland(OfflinePlayer player) {
         return !getIslandId(player).equalsIgnoreCase("UNKNOWN");
     }
 
     @Override
-    public String getIslandId(Player player) {
-        Island island = BentoBox.getInstance().getIslands().getIsland(player.getWorld(), player.getUniqueId());
+    public String getIslandId(OfflinePlayer player) {
+        Island island = BentoBox.getInstance().getIslands().getIsland(getWorld(), player.getUniqueId());
         if (island == null) return "UNKNOWN";
         return island.getUniqueId();
+    }
+
+    public World getWorld()
+    {
+        if (cachedWorld == null)
+        {
+            Optional<World> world = Bukkit.getWorlds().stream().filter(this::isCorrectWorld).findFirst();
+            return world.orElse(null);
+        }else{
+            return Bukkit.getWorld(cachedWorld);
+        }
+    }
+
+    public boolean isCorrectWorld(World world)
+    {
+        Optional<Addon> addon = BentoBox.getInstance().getAddonsManager().getAddonByName(addonName);
+        return addon.filter(value -> ((GameModeAddon) value).inWorld(world)).isPresent();
     }
 
     @Override

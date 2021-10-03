@@ -47,6 +47,11 @@ public class Offset {
         return new Offset(data.split(","));
     }
 
+    public Location calc(StackerLocation origin)
+    {
+        return origin.clone().toLocation(this);
+    }
+
     public Location calc(Location origin) {
         return origin.clone().add(this.x, this.y, this.z);
     }

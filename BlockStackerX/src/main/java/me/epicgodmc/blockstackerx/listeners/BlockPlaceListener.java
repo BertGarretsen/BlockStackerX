@@ -1,12 +1,13 @@
 package me.epicgodmc.blockstackerx.listeners;
 
-import me.epicgodmc.blockstackerx.StackerBlock;
+import me.epicgodmc.blockstackerx.stacker.StackerBlock;
 import me.epicgodmc.blockstackerx.StackerPlugin;
 import me.epicgodmc.blockstackerx.settings.Localization;
 import me.epicgodmc.blockstackerx.settings.StackerRegister;
 import me.epicgodmc.blockstackerx.settings.StackerSettings;
+import me.epicgodmc.blockstackerx.stacker.StackerNbtData;
 import me.epicgodmc.blockstackerx.storage.IslandCache;
-import me.epicgodmc.blockstackerx.util.SimpleLocation;
+import me.epicgodmc.blockstackerx.util.StackerLocation;
 import me.epicgodmc.blockstackerx.util.StackerState;
 import me.epicgodmc.blockstackerx.util.StackerUtils;
 import org.bukkit.block.Block;
@@ -29,8 +30,16 @@ public class BlockPlaceListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onBlockPlace(BlockPlaceEvent e) {
         if (e.isCancelled()) return;
-        Valid.checkPermission(e.getPlayer(), "blockstackerx.stacker.place");
-        if (StackerUtils.isStacker(e.getItemInHand())) {
+
+        StackerNbtData stackerNbtData = new StackerNbtData(e.getItemInHand());
+        if (stackerNbtData.isStacker()) {
+            if (!Valid.checkPermission(e.getPlayer(), "blockstackerx.stacker.place"))
+            {
+                e.setCancelled(true);
+                return;
+            }
+
+
             if (!plugin.getHookManager().getSkyblockHook().hasIsland(e.getPlayer())) {
                 Common.tell(e.getPlayer(), Localization.Stacker_Actions.NO_ISLAND_FOUND);
                 e.setCancelled(true);
@@ -40,14 +49,29 @@ public class BlockPlaceListener implements Listener {
 
             Player player = e.getPlayer();
             Block block = e.getBlockPlaced();
-            StackerState state = new StackerState(e.getItemInHand());
 
-            StackerSettings settings = StackerRegister.getInstance().getSettings(state.getId());
-            Valid.checkNotNull(settings, "XStacker object is null");
+            StackerSettings settings = StackerRegister.getInstance().getSettings(stackerNbtData.getStackerIdentifier());
+            if (settings == null)
+            {
+                e.setCancelled(true);
+                Common.tell(player, Localization.Stacker_Actions.STACKERTYPE_BROKEN);
+                return;
+            }
 
-            StackerBlock b = new StackerBlock(player.getUniqueId(), state.getId(), new SimpleLocation(block.getWorld().getName(), block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ()));
+
+            StackerBlock b;
+            if (!stackerNbtData.isUsedStacker())
+            {
+                b = new StackerBlock(player.getUniqueId(), stackerNbtData.getStackerIdentifier(), new StackerLocation(block));
+            }else{
+
+                b = new StackerBlock(player.getUniqueId(), stackerNbtData.getStackerIdentifier(), new StackerLocation(block), stackerNbtData.getMaterial(), stackerNbtData.getValue());
+            }
+
+
             islandCache.addStacker(b);
             Common.tell(e.getPlayer(), Localization.Stacker_Actions.STACKER_PLACED);
         }
     }
+
 }

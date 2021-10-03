@@ -29,6 +29,5 @@ public class CreateCmd extends SimpleSubCommand {
         }else{
             Common.tell(getPlayer(), Localization.Command.STACKER_ALREADY_EXISTS.replace("{stacker_type}", args[0]));
         }
-
     }
 }

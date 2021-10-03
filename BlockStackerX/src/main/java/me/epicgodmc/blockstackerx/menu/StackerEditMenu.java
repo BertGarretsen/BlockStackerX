@@ -2,6 +2,7 @@ package me.epicgodmc.blockstackerx.menu;
 
 import me.epicgodmc.blockstackerx.conversation.stacker.*;
 import me.epicgodmc.blockstackerx.menu.common.DecorationButton;
+import me.epicgodmc.blockstackerx.settings.StackerRegister;
 import me.epicgodmc.blockstackerx.settings.StackerSettings;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -10,13 +11,15 @@ import org.mineacademy.fo.Common;
 import org.mineacademy.fo.menu.Menu;
 import org.mineacademy.fo.menu.button.Button;
 import org.mineacademy.fo.menu.button.ButtonConversation;
+import org.mineacademy.fo.menu.button.ButtonRemove;
 import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.remain.CompMaterial;
+
+import java.util.Collections;
 
 public class StackerEditMenu extends Menu {
 
 
-    private final Button idButton;
     private final Button offsetButton;
     private final Button valueButton;
     private final Button maxStorageButton;
@@ -24,6 +27,7 @@ public class StackerEditMenu extends Menu {
     private final Button availableBlocksButton;
     private final Button physicalExample;
 
+    private final Button deleteButton;
     private final Button finishButton;
 
     public StackerEditMenu(StackerSettings draft) {
@@ -31,21 +35,7 @@ public class StackerEditMenu extends Menu {
         setTitle("&c&lEditing Stacker &8((&7" + draft.getIdentifier() + "&8))");
         setSize(9 * 5);
 
-        //temp
-        setSlotNumbersVisible();
-        //
 
-        idButton = new ButtonConversation(new IdentifierConversation(draft), ItemCreator.of(CompMaterial.NAME_TAG,
-                "&c&lIdentifier",
-                "",
-                "&cExample: &7\"sponge_stacker\"",
-                "",
-                "&cInformation:",
-                "&7What should the internal name",
-                "&7Of this stacker be?",
-                "",
-                "&cValue: &7\"" + draft.getIdentifier() + "\"",
-                "&7((Click to edit))"));
         offsetButton = new ButtonConversation(new OffsetConversation(draft), ItemCreator.of(CompMaterial.COMPASS,
                 "&c&lHologram-Offset",
                 "",
@@ -97,7 +87,7 @@ public class StackerEditMenu extends Menu {
                         "&c&lTeam-Stacking",
                         "",
                         "&cInformation:",
-                        "&7Wether or not every player on",
+                        "&7Whether or not every player on",
                         "&7The stacker owner's team can",
                         "&7Interact with the stacker",
                         "",
@@ -153,19 +143,23 @@ public class StackerEditMenu extends Menu {
                 }
             }
         };
+        deleteButton = new ButtonRemove(this, "StackerType", draft.getIdentifier(), (toDelete) ->
+        {
+            StackerRegister.getInstance().deleteSettings(toDelete);
+        });
     }
 
     @Override
     public ItemStack getItemAt(int slot) {
-        if (slot == 10) return idButton.getItem();
+        if (slot == 10) return physicalExample.getItem();
         if (slot == 11) return offsetButton.getItem();
         if (slot == 12) return valueButton.getItem();
         if (slot == 14) return maxStorageButton.getItem();
         if (slot == 15) return teamStackingButton.getItem();
         if (slot == 16) return availableBlocksButton.getItem();
-        if (slot == 22) return physicalExample.getItem();
+        if (slot == 36) return deleteButton.getItem();
         if (slot == 40) return finishButton.getItem();
-        return null;
+        return ItemCreator.of(CompMaterial.BLACK_STAINED_GLASS_PANE, " ", Collections.emptyList()).build().make();
     }
 
 }

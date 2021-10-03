@@ -2,14 +2,20 @@ package me.epicgodmc.blockstackerx;
 
 import lombok.Getter;
 import me.epicgodmc.blockstackerx.command.blockstacker.BlockStackerCmdGroup;
-import me.epicgodmc.blockstackerx.listeners.BlockBreakListener;
+import me.epicgodmc.blockstackerx.listeners.BlockInteractListener;
+import me.epicgodmc.blockstackerx.listeners.BlockModifyListener;
 import me.epicgodmc.blockstackerx.listeners.BlockPlaceListener;
+import me.epicgodmc.blockstackerx.listeners.PlayerJoinListener;
 import me.epicgodmc.blockstackerx.settings.Localization;
 import me.epicgodmc.blockstackerx.settings.Settings;
 import me.epicgodmc.blockstackerx.settings.StackerRegister;
+import me.epicgodmc.blockstackerx.settings.WorthSettings;
 import me.epicgodmc.blockstackerx.storage.IslandCache;
+import me.epicgodmc.blockstackerx.storage.IslandStorage;
+import me.epicgodmc.blockstackerx.storage.IslandStorageType;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.plugin.SimplePlugin;
 import org.mineacademy.fo.settings.YamlStaticConfig;
@@ -23,7 +29,7 @@ public final class StackerPlugin extends SimplePlugin {
     @Getter
     private static StackerPlugin instance;
     private boolean shutdown = false;
-
+    @Getter private IslandStorage islandStorage;
 
     @Getter
     private HookManager hookManager;
@@ -41,11 +47,18 @@ public final class StackerPlugin extends SimplePlugin {
         Common.logNoPrefix(getLogo());
         this.hookManager = new HookManager(this);
         if (this.hookManager.verify()) {
-
+            this.islandStorage = IslandStorageType.valueOf(Settings.STORAGE_TYPE).getStorage();
+            Common.logNoPrefix("Storage type has been set to: " + Settings.STORAGE_TYPE);
 
             registerCommands();
+            Common.logNoPrefix("Registered Commands");
+
             registerListeners();
+            Common.logNoPrefix("Registered listeners");
+
             StackerRegister.getInstance().loadSettingFiles();
+            new WorthSettings();
+            Common.logNoPrefix("Loaded files");
 
 
             Common.logNoPrefix(String.format("Loaded BlockStackerX in %s MS", System.currentTimeMillis() - time));
@@ -60,7 +73,7 @@ public final class StackerPlugin extends SimplePlugin {
     protected void onPluginStop() {
         if (shutdown) return;
 
-        IslandCache.saveAll();
+        this.islandStorage.saveAll();
     }
 
     @Override
@@ -71,21 +84,21 @@ public final class StackerPlugin extends SimplePlugin {
         StackerRegister.getInstance().loadSettingFiles();
     }
 
-    private void registerListeners()
-    {
+    private void registerListeners() {
         registerEvents(new BlockPlaceListener(this));
-        registerEvents(new BlockBreakListener(this));
+        registerEvents(new BlockInteractListener(this));
+        registerEvents(new PlayerJoinListener());
+        registerEvents(new BlockModifyListener());
     }
 
-    private void registerCommands()
-    {
+    private void registerCommands() {
         registerCommands("blockstackerx|bs", new BlockStackerCmdGroup());
     }
 
 
     @Override
     public List<Class<? extends YamlStaticConfig>> getSettings() {
-        return Arrays.asList(Localization.class);
+        return Arrays.asList(Localization.class, Settings.class);
     }
 
     private String getLogo() {
@@ -101,17 +114,25 @@ public final class StackerPlugin extends SimplePlugin {
         return Common.join(logoLines, "\n");
     }
 
+
     private void shutdown(int exit) {
         Common.runLater(1, () ->
         {
-            // 0 = safe stop
-            // 1 = force stop
-
             if (exit == 0) {
                 this.onPluginStop();
             }
             Bukkit.getPluginManager().disablePlugin(this);
         });
+    }
+
+
+    @Override
+    public boolean areScriptVariablesEnabled() {
+        return false;
+    }
+
+    public void registerListener(Listener listener) {
+        registerEvents(listener);
     }
 
     public static void sendDebug(String... lines) {

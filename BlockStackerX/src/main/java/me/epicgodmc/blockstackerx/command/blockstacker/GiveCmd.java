@@ -4,6 +4,7 @@ import me.epicgodmc.blockstackerx.command.TargettedCommand;
 import me.epicgodmc.blockstackerx.settings.Localization;
 import me.epicgodmc.blockstackerx.settings.StackerRegister;
 import me.epicgodmc.blockstackerx.settings.StackerSettings;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.PlayerUtil;
@@ -40,7 +41,7 @@ public class GiveCmd extends TargettedCommand {
     @Override
     protected List<String> tabComplete() {
         if (args.length == 3) {
-            return completeLastWord(1, 2, 10, 32, 64);
+            return completeLastWord(1, 2, 5, 10, 32, 64);
         } else if (args.length != 2) {
             return null;
         } else {
@@ -48,4 +49,6 @@ public class GiveCmd extends TargettedCommand {
             return TabUtil.complete(id, StackerRegister.getInstance().getLoadedStackerNames());
         }
     }
+
+
 }

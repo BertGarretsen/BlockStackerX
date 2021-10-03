@@ -9,3 +9,30 @@ DebugMessages: true
 Locale: "en"
 
 Prefix: "&6&lBlockStackerX &7"
+
+
+# Available Storage Types:
+#
+# Json Key Features:
+#
+#   Json is a moderately quick storage method.
+#   Its fairly easy to manually change some data in json files
+#   Json Requires quite a bit of extra data storage
+# Json Type ID: "JSON"
+#
+#
+# Byte Key Features:
+#
+#   Byte Storage is the fastest available and is about 3.5 Times faster than Json in the best scenario
+#   Byte Storage requires the least amount of data on your hard drive
+#   Its very difficult to manually change data inside byte files
+# Byte Type ID: "BYTE"
+#
+# Check out these benchmarks for an in depth understanding of each storage method's speeds
+# If you don't care for readability i highly recommend byte storage
+StorageType: "BYTE"
+
+
+
+Stacker_Add_Action: "RIGHT_CLICK_BLOCK"
+Stacker_Take_Action: "LEFT_CLICK_BLOCK"

@@ -2,6 +2,7 @@ Player:
   Inventory_Full: "You cannot perform this action as your inventory would overflow"
   Not_Online: "&cPlayer {player} &cis not online on this server."
 
+
 Stacker_Actions:
   Stacker_Broken_No_Pickaxe: "You need to hold a pickaxe to break this stacker!"
   Stacker_Placed: "Stacker Placed!"
@@ -9,6 +10,7 @@ Stacker_Actions:
   Inventory_Interact_Failed: "You failed to interact with a valid block in under 10 seconds"
   No_Island_Found: "You must be a member of an island to interact with stackers."
   Material_Contains_NBT: "The block you are holding contains Nbt-Data"
+  Stacker_No_Permission: "You don't have permission from the owner to perform this action."
   No_Permission: "You don't have permission to modify this stacker!"
   Error: "&4&lOups! &cThe action failed :( report the error."
   Min_Storage_Reached: "This stacker is now empty"
@@ -18,9 +20,9 @@ Stacker_Actions:
   Material_Chosen: "You have chosen to stack {block} in this stacker."
   Modify_Deny: "You can't use this stacker. it is owned by {owner}."
   Invalid_Block: "You can't stack '{block}' onto this stacker!, Available blocks are: {blocks_available}."
-
-Action:
   No_Block_In_Hand: "You need to hold a valid block to stack into this stacker!"
+  No_Type_Found: "Your stacker needs a block selected in order to perform this action"
+  StackerType_Broken: "This stacker is invalid due to its settings being deleted."
 
 Commands:
   Stacker_Already_Exists: "There already exists a stacker with identifier '{stacker_type}'"

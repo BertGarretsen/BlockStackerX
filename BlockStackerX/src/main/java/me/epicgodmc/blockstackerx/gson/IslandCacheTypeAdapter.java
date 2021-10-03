@@ -2,7 +2,7 @@ package me.epicgodmc.blockstackerx.gson;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
-import me.epicgodmc.blockstackerx.StackerBlock;
+import me.epicgodmc.blockstackerx.stacker.StackerBlock;
 import me.epicgodmc.blockstackerx.storage.IslandCache;
 
 import java.lang.reflect.Type;

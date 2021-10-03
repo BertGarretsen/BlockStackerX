@@ -1,0 +1,6 @@
+DefaultWorth: 1
+Worths:
+  EMERALD_BLOCK: 20
+  DIAMOND_BLOCK: 10
+  GOLD_BLOCK: 7.5
+  IRON_BLOCK: 5

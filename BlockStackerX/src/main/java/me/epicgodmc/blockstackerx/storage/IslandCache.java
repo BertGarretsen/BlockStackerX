@@ -2,22 +2,17 @@ package me.epicgodmc.blockstackerx.storage;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.epicgodmc.blockstackerx.StackerBlock;
+import me.epicgodmc.blockstackerx.stacker.StackerBlock;
 import me.epicgodmc.blockstackerx.StackerPlugin;
-import me.epicgodmc.blockstackerx.gson.GlobalGson;
-import me.epicgodmc.blockstackerx.util.SimpleLocation;
+import me.epicgodmc.blockstackerx.util.StackerLocation;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.mineacademy.fo.collection.StrictMap;
 import org.mineacademy.fo.collection.expiringmap.ExpirationPolicy;
 import org.mineacademy.fo.collection.expiringmap.ExpiringMap;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -26,63 +21,74 @@ import java.util.concurrent.TimeUnit;
  */
 public class IslandCache {
 
-    private static ExpiringMap<String, IslandCache> cacheMap = ExpiringMap.builder()
+
+    @Getter
+    private static transient ExpiringMap<String, IslandCache> cacheMap = ExpiringMap.builder()
             .expiration(10, TimeUnit.MINUTES)
             .expirationPolicy(ExpirationPolicy.ACCESSED)
             .asyncExpirationListener((k, v) ->
-                    ((IslandCache) v).save()).build();
+            {
+                try {
+                    ((IslandCache) v).save();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).build();
 
-    private final Path storage;
     @Getter private final String UUID;
-    @Getter @Setter private StrictMap<SimpleLocation, StackerBlock> stackers;
+    @Getter @Setter private StrictMap<StackerLocation, StackerBlock> stackers;
 
 
     public IslandCache(String islandUUID) {
         this.UUID = islandUUID;
-        this.storage = StackerPlugin.getInstance().getDataFolder().toPath().resolve("IslandData").resolve(islandUUID + ".json");
         this.stackers = new StrictMap<>();
     }
 
-    public boolean hasStackerAt(SimpleLocation location) {
+    public boolean hasStackerAt(StackerLocation location) {
         return this.stackers.contains(location);
     }
 
     public boolean hasStackerAt(Location location) {
-        return this.stackers.contains(SimpleLocation.of(location));
+        return this.stackers.contains(new StackerLocation(location));
     }
 
-    public StackerBlock getStackerAt(SimpleLocation simpleLocation) {
-        return this.stackers.getOrDefault(simpleLocation, null);
+    public StackerBlock getStackerAt(StackerLocation stackerLocation) {
+        return this.stackers.getOrDefault(stackerLocation, null);
     }
 
     public StackerBlock getStackerAt(Location location) {
-        return this.stackers.getOrDefault(SimpleLocation.of(location), null);
+        return this.stackers.getOrDefault(new StackerLocation(location), null);
     }
 
     public void addStacker(StackerBlock stackerBlock) {
-        this.stackers.put(stackerBlock.getSimpleLocation(), stackerBlock);
+        this.stackers.put(stackerBlock.getLocation(), stackerBlock);
     }
 
-    public void deleteStacker(SimpleLocation simpleLocation)
-    {
-        this.stackers.remove(simpleLocation);
+    public void deleteStacker(StackerLocation stackerLocation) {
+        this.stackers.remove(stackerLocation);
     }
 
-    public void deleteStacker(Location location)
-    {
-        this.stackers.remove(SimpleLocation.of(location));
+    public void deleteStacker(Location location) {
+        this.stackers.remove(new StackerLocation(location));
     }
 
-    public ItemStack deleteStacker(StackerBlock stackerBlock)
-    {
+    public ItemStack deleteStacker(StackerBlock stackerBlock) {
         ItemStack result = stackerBlock.getItemForm();
         stackerBlock.delete();
-        this.deleteStacker(stackerBlock.getSimpleLocation());
+        this.deleteStacker(stackerBlock.getLocation());
         return result;
     }
 
     public void addAllStackers(Iterable<StackerBlock> stackerBlocks) {
         stackerBlocks.forEach(this::addStacker);
+    }
+
+
+
+    public static IslandCache getCache(Player player)
+    {
+        String uuid = StackerPlugin.getInstance().getHookManager().getIslandID(player);
+        return getCache(uuid);
     }
 
 
@@ -95,79 +101,34 @@ public class IslandCache {
     public static IslandCache getCache(String uuid) {
         IslandCache cache = cacheMap.getOrDefault(uuid, null);
         if (cache == null) {
-            Path path = StackerPlugin.getInstance().getDataFolder().toPath().resolve("IslandData").resolve(uuid.toString() + ".json");
-            if (Files.exists(path)) {
-                CompletableFuture<IslandCache> asyncCache = new CompletableFuture<>();
-
-                new Thread(() ->
-                {
-                    try {
-                        String json = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
-                        asyncCache.complete(GlobalGson.GSON.fromJson(json, IslandCache.class));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        asyncCache.complete(null);
-                    }
-                }).start();
-
-                try {
-                    cache = asyncCache.get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                cache = new IslandCache(uuid);
-            }
+            cache = StackerPlugin.getInstance().getIslandStorage().load(uuid);
             cacheMap.put(uuid, cache);
         }
         return cache;
     }
 
 
-    public void saveAndUnload() {
+    public void saveAndUnload() throws IOException {
         save();
         stackers.values().forEach(StackerBlock::unload);
     }
 
     /**
-     * Saves the object to its json file
+     * Saves the object to its file
      */
-    public void save() {
-        try {
-            StackerPlugin.sendDebug("Island Cache " + this.UUID + " has been unloaded and saved.");
-            this.createFileIfNotExists();
-            Files.write(this.storage, GlobalGson.GSON.toJson(this).getBytes(StandardCharsets.UTF_8));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Saves all loaded objects to their corresponding json files
-     */
-    public static void saveAll() {
-        cacheMap.forEach((k, v) ->
-                v.save());
+    public void save() throws IOException {
+        StackerPlugin.getInstance().getIslandStorage().save(this);
     }
 
     public static void saveAndUnloadAll() {
-        cacheMap.forEach((k, v) -> v.saveAndUnload());
-        clean();
-    }
-
-    /**
-     * Creates a json file for the IslandCache if it does not exist
-     * Automatically creates parent file if it does not exist
-     *
-     * @throws IOException
-     */
-    public void createFileIfNotExists() throws IOException {
-        if (!Files.exists(this.storage)) {
-            if (!Files.exists(this.storage.getParent())) {
-                Files.createDirectory(this.storage.getParent());
+        cacheMap.forEach((k, v) -> {
+            try {
+                v.saveAndUnload();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            Files.createFile(this.storage);
-        }
+        });
+        clean();
     }
 
     /**
@@ -176,5 +137,6 @@ public class IslandCache {
     public static void clean() {
         cacheMap.clear();
     }
+
 
 }

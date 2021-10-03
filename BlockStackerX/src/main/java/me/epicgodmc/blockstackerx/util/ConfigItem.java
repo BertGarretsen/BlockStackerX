@@ -65,6 +65,12 @@ public class ConfigItem {
     }
 
 
+    public void setPlaceholders(Map<String, Object> placeholders)
+    {
+        this.placeholders.putAll(placeholders);
+    }
+
+
     public void setTag(String key, String value) {
         this.tags.put(key, value);
     }

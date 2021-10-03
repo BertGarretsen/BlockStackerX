@@ -1,5 +1,7 @@
 package me.epicgodmc.blockstackerx.settings;
 
+import me.epicgodmc.blockstackerx.storage.IslandStorageType;
+import org.bukkit.event.block.Action;
 import org.mineacademy.fo.settings.SimpleSettings;
 
 /**
@@ -17,11 +19,16 @@ public class Settings extends SimpleSettings
 
 
     public static Boolean DEBUG;
+    public static Action STACKER_ADD_ACTION;
+    public static Action STACKER_TAKE_ACTION;
+    public static String STORAGE_TYPE;
 
     private static void init()
     {
         DEBUG = getBoolean("DebugMessages");
-
+        STACKER_ADD_ACTION = Enum.valueOf(Action.class, getString("Stacker_Add_Action"));
+        STACKER_TAKE_ACTION = Enum.valueOf(Action.class, getString("Stacker_Take_Action"));
+        STORAGE_TYPE = getString("StorageType");
     }
 
 }

@@ -4,9 +4,11 @@ import com.google.common.collect.Maps;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
-import me.epicgodmc.blockstackerx.StackerBlock;
+import me.epicgodmc.blockstackerx.stacker.StackerBlock;
+import me.epicgodmc.blockstackerx.settings.common.InventorySettings;
 import me.epicgodmc.blockstackerx.util.ConfigItem;
 import me.epicgodmc.blockstackerx.util.Offset;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.mineacademy.fo.Common;
@@ -46,6 +48,9 @@ public class StackerSettings extends YamlConfig implements Comparable<StackerSet
     private ConfigItem used;
 
 
+    @Getter
+    private InventorySettings inventorySettings;
+
     public StackerSettings(final String identifier) {
         loadConfiguration("stacker.yml", "stackers/" + identifier + (!identifier.endsWith(".yml") ? ".yml" : ""));
         this.identifier = identifier;
@@ -70,6 +75,7 @@ public class StackerSettings extends YamlConfig implements Comparable<StackerSet
         maxStorage = getInteger("MaxStorage");
         teamStacking = getBoolean("TeamStacking");
         availableBlocks = getMaterialList("AvailableBlocks").getSource();
+        inventorySettings = new InventorySettings(getMap("Gui"));
 
         used = new ConfigItem(getMap("PickupItem"));
     }
@@ -80,10 +86,10 @@ public class StackerSettings extends YamlConfig implements Comparable<StackerSet
     }
 
 
-    public ItemStack getUsedStacker(StackerBlock stackerBlock)
-    {
+    public ItemStack getUsedStacker(StackerBlock stackerBlock) {
+        OfflinePlayer offlinePlayer = Remain.getOfflinePlayerByUUID(stackerBlock.getOwner());
         used.setPlaceholder("value", stackerBlock.getValue());
-        used.setPlaceholder("player", Remain.getPlayerByUUID(stackerBlock.getOwner()).getName());
+        used.setPlaceholder("player", offlinePlayer != null ? offlinePlayer.getName() : "UNKNOWN");
         used.setMaterial(stackerBlock.getStackMaterial());
         used.setAmount(1);
 
@@ -94,6 +100,7 @@ public class StackerSettings extends YamlConfig implements Comparable<StackerSet
         compound.setString("StackerIdentifier", this.identifier);
         compound.setString("StackerState", "USED");
         compound.setInteger("Value", stackerBlock.getValue());
+        compound.setString("Material", stackerBlock.hasStackMaterial() ? stackerBlock.getStackMaterial().toString() : "NA");
         return nbtItem.getItem();
     }
 
@@ -161,8 +168,7 @@ public class StackerSettings extends YamlConfig implements Comparable<StackerSet
         save("TeamStacking", teamStacking);
     }
 
-    public List<String> getAvailableBlockNames()
-    {
+    public List<String> getAvailableBlockNames() {
         return Common.convert(availableBlocks, value -> ItemUtil.bountifyCapitalized(value.getMaterial()));
     }
 
