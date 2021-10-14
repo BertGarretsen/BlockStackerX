@@ -2,10 +2,12 @@ package me.epicgodmc.blockstackerx;
 
 import lombok.Getter;
 import me.epicgodmc.blockstackerx.hook.hologram.HologramHook;
+import me.epicgodmc.blockstackerx.hook.hologram.HologramProviderType;
 import me.epicgodmc.blockstackerx.hook.hologram.HolographicDisplays_Hook;
 import me.epicgodmc.blockstackerx.hook.hologram.StackerHologram;
 import me.epicgodmc.blockstackerx.hook.skyblock.BentoBox_Hook;
 import me.epicgodmc.blockstackerx.hook.skyblock.SkyblockHook;
+import me.epicgodmc.blockstackerx.settings.Settings;
 import me.epicgodmc.blockstackerx.stacker.StackerBlock;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -49,14 +51,23 @@ public class HookManager {
                 Common.log("Could not find the Level addon loaded by BentoBox, please install it before using BlockStackerX");
                 return;
             }
-            Common.logF("Using BentoBox ( Level & %s Addon) as Skyblock dependency", chosenAddon);
+            Common.logF("Using BentoBox ( Level & %s Addon) as Game dependency", chosenAddon);
             this.skyblockHook = new BentoBox_Hook(chosenAddon);
         }
 
-        if (Common.doesPluginExist("HolographicDisplays")) {
-            this.hologramHook = new HolographicDisplays_Hook();
-            Common.log("Using HolographicDisplays as Hologram dependency!");
+        HologramProviderType provider = HologramProviderType.valueOf(Settings.HOLOGRAM_PROVIDER_TYPE.toUpperCase());
+
+        if (provider != HologramProviderType.CUSTOM)
+        {
+            if (Common.doesPluginExist("HolographicDisplays")) {
+                this.hologramHook = provider.getHook();
+                Common.log("Using HolographicDisplays as Hologram dependency!");
+            }
+        }else{
+            this.hologramHook = provider.getHook();
+            Common.log("Using Holograms provided by BlockStackerX");
         }
+
     }
 
     protected boolean verify() {

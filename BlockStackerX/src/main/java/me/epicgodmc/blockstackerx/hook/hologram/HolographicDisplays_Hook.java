@@ -41,4 +41,9 @@ public class HolographicDisplays_Hook implements HologramHook
         return hg;
     }
 
+    @Override
+    public void disable() {
+        return;
+    }
+
 }

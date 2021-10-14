@@ -66,6 +66,8 @@ public class StackerSettings extends YamlConfig implements Comparable<StackerSet
 
     @Override
     protected void onLoadFinish() {
+
+
         state = getEnum("State", State.class);
         item = new ConfigItem(getMap("Item"));
         String[] splittedHologramOffset = getString("HologramOffset").split(",");

@@ -13,4 +13,5 @@ public interface HologramHook
 
     Object updateLine(Object hologram, int line, String text);
 
+    void disable();
 }

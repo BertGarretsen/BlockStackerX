@@ -1,9 +1,11 @@
 package me.epicgodmc.blockstackerx.util;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.mineacademy.fo.PlayerUtil;
 import org.mineacademy.fo.remain.CompMaterial;
 
 /**
@@ -11,6 +13,39 @@ import org.mineacademy.fo.remain.CompMaterial;
  * Copyright © EpicGodMC
  */
 public class InventoryUtils {
+
+
+
+    public static boolean take(Player player, ItemStack stack, int amount) {
+        if (!containsAtLeast(player, amount, stack))
+            return false;
+
+        for (int i = 0; i < amount; i++)
+            takeFirstOnePiece(player, stack);
+
+        return true;
+    }
+
+    public static boolean takeFirstOnePiece(final Player player, final ItemStack stack) {
+        for (final ItemStack item : player.getInventory().getContents())
+            if (item.isSimilar(stack)) {
+                PlayerUtil.takeOnePiece(player, item);
+                return true;
+            }
+        return false;
+    }
+
+
+
+    public static boolean containsAtLeast(Player player, int atLeastSize, ItemStack stack) {
+        int foundSize = 0;
+
+        for (final ItemStack item : player.getInventory().getContents())
+            if (item != null && item.getType() == stack.getType())
+                foundSize += item.getAmount();
+
+        return foundSize >= atLeastSize;
+    }
 
     public static int countSimilar(Inventory inventory, ItemStack itemStack) {
         int ret = 0;

@@ -28,11 +28,13 @@ Prefix: "&6&lBlockStackerX &7"
 #   Its very difficult to manually change data inside byte files
 # Byte Type ID: "BYTE"
 #
-# Check out these benchmarks for an in depth understanding of each storage method's speeds
+# Check out these benchmarks for an in depth understanding of each storage method's speeds //TODO Add benchmark link
 # If you don't care for readability i highly recommend byte storage
 StorageType: "BYTE"
 
-
+# HD_DISPLAYS (Will attempt to hook into Holographic displays)
+# CUSTOM (Will use hologram provided by BlockStackerX)
+HologramType: "CUSTOM"
 
 Stacker_Add_Action: "RIGHT_CLICK_BLOCK"
 Stacker_Take_Action: "LEFT_CLICK_BLOCK"

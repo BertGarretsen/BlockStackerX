@@ -139,7 +139,7 @@ public class BlockInteractListener implements Listener {
         if (stackerBlock.getStackMaterial().is(material.getMaterial())) {
             if (!player.isSneaking()) {
                 if (stackerBlock.canAddValue(1)) {
-                    PlayerUtil.takeOnePiece(e.getPlayer(), hand);
+                    StackerUtils.takeFirstOne(e.getPlayer(), hand);
                     stackerBlock.incrementValue(1);
                     tellAdded(player, 1, material);
                 } else {
@@ -148,7 +148,7 @@ public class BlockInteractListener implements Listener {
             } else {
                 if (stackerBlock.canAddValue(hand.getAmount())) {
                     int handAmt = hand.getAmount();
-                    boolean success = PlayerUtil.take(player, material, handAmt);
+                    boolean success = StackerUtils.takeClean(player, material.toItem(), handAmt);
                     if (success) {
                         stackerBlock.incrementValue(handAmt);
                         tellAdded(player, handAmt, material);
@@ -157,17 +157,13 @@ public class BlockInteractListener implements Listener {
                     }
                 } else if (stackerBlock.getSpaceLeft() >= 1) {
                     int storageLeft = stackerBlock.getSpaceLeft();
-                    boolean success = PlayerUtil.take(player, material, storageLeft);
+                    boolean success = StackerUtils.takeClean(player, material.toItem(), storageLeft);
                     if (success) {
                         stackerBlock.incrementValue(storageLeft);
                         tellAdded(player, storageLeft, material);
                     }
                 } else {
-                    String replacedMsg = Replacer.of(Localization.Stacker_Actions.MAX_STORAGE_REACHED)
-                            .find("amount")
-                            .replace(stackerSettings.getMaxStorage())
-                            .getReplacedMessageJoined();
-                    Common.tell(player, replacedMsg);
+                    Common.tell(player, Localization.Stacker_Actions.MAX_STORAGE_REACHED.replace("{amount}", String.valueOf(stackerSettings.getMaxStorage())));
                 }
             }
         }

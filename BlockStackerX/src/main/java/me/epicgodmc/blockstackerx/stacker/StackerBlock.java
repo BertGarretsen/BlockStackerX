@@ -102,9 +102,9 @@ public class StackerBlock implements BaosSerializer, BaosDeserializer {
     }
 
     public void delete() {
+        unload();
         this.location.setBlock(Material.AIR);
         IslandCache.getCache(StackerPlugin.getInstance().getHookManager().getIslandID(getPlayerOwner())).deleteStacker(location);
-        unload();
     }
 
     public int getSpaceLeft() {

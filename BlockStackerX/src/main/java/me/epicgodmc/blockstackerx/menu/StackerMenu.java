@@ -8,6 +8,7 @@ import me.epicgodmc.blockstackerx.settings.common.InventorySettings;
 import me.epicgodmc.blockstackerx.stacker.StackerPermission;
 import me.epicgodmc.blockstackerx.util.InventoryItem;
 import me.epicgodmc.blockstackerx.util.InventoryUtils;
+import me.epicgodmc.blockstackerx.util.StackerUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -40,8 +41,7 @@ public class StackerMenu extends Menu {
     public StackerMenu(UUID player, StackerBlock block) {
         this.block = block;
 
-        if (block.getSettings() == null)
-        {
+        if (block.getSettings() == null) {
             return;
         }
         this.inventorySettings = block.getSettings().getInventorySettings();
@@ -85,16 +85,24 @@ public class StackerMenu extends Menu {
             @Override
             public void onClickedInMenu(Player player, Menu menu, ClickType click) {
                 if (block.hasStackMaterial()) {
-                    int count = InventoryUtils.countSimilar(player.getInventory(), block.getStackMaterial().toItem());
+                    int count = StackerUtils.countSimilar(player.getInventory(), block.getStackMaterial().toItem());
                     if (block.canAddValue(count)) {
-                        PlayerUtil.take(player, block.getStackMaterial(), count);
-                        block.incrementValue(count);
-                        Common.tell(player, Localization.Stacker_Actions.BLOCK_ADDED.replace("{amount}", String.valueOf(count)).replace("{block}", ItemUtil.bountifyCapitalized(block.getStackMaterial())));
+                        boolean taken = StackerUtils.takeClean(player, block.getStackMaterial().toItem(), count);
+                        if (taken) {
+                            block.incrementValue(count);
+                            Common.tell(player, Localization.Stacker_Actions.BLOCK_ADDED.replace("{amount}", String.valueOf(count)).replace("{block}", ItemUtil.bountifyCapitalized(block.getStackMaterial())));
+                        } else {
+                            Common.tell(player, Localization.Stacker_Actions.FAILED_TO_DEPOSIT);
+                        }
                     } else {
                         int fittingCount = block.getSpaceLeft();
-                        PlayerUtil.take(player, block.getStackMaterial(), fittingCount);
-                        block.incrementValue(fittingCount);
-                        Common.tell(player, Localization.Stacker_Actions.BLOCK_ADDED.replace("{amount}", String.valueOf(fittingCount)).replace("{block}", ItemUtil.bountifyCapitalized(block.getStackMaterial())));
+                        boolean taken = StackerUtils.takeClean(player, block.getStackMaterial().toItem(), fittingCount);
+                        if (taken) {
+                            block.incrementValue(fittingCount);
+                            Common.tell(player, Localization.Stacker_Actions.BLOCK_ADDED.replace("{amount}", String.valueOf(fittingCount)).replace("{block}", ItemUtil.bountifyCapitalized(block.getStackMaterial())));
+                        }else{
+                            Common.tell(player, Localization.Stacker_Actions.FAILED_TO_DEPOSIT);
+                        }
                     }
                     redrawInv();
                 } else Common.tell(player, Localization.Stacker_Actions.NO_TYPE_FOUND);

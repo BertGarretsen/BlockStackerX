@@ -16,6 +16,7 @@ import me.epicgodmc.blockstackerx.storage.IslandStorageType;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
+import org.mineacademy.fo.ASCIIUtil;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.plugin.SimplePlugin;
 import org.mineacademy.fo.settings.YamlStaticConfig;
@@ -29,10 +30,9 @@ public final class StackerPlugin extends SimplePlugin {
     @Getter
     private static StackerPlugin instance;
     private boolean shutdown = false;
-    @Getter private IslandStorage islandStorage;
 
-    @Getter
-    private HookManager hookManager;
+    @Getter private IslandStorage islandStorage;
+    @Getter private HookManager hookManager;
 
 
     @Override
@@ -74,11 +74,13 @@ public final class StackerPlugin extends SimplePlugin {
         if (shutdown) return;
 
         this.islandStorage.saveAll();
+        this.getHookManager().getHologramHook().disable();
     }
 
     @Override
     protected void onPluginReload() {
         IslandCache.saveAndUnloadAll();
+        this.getHookManager().getHologramHook().disable();
 
         registerCommands();
         StackerRegister.getInstance().loadSettingFiles();

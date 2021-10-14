@@ -23,6 +23,7 @@ Stacker_Actions:
   No_Block_In_Hand: "You need to hold a valid block to stack into this stacker!"
   No_Type_Found: "Your stacker needs a block selected in order to perform this action"
   StackerType_Broken: "This stacker is invalid due to its settings being deleted."
+  Failed_To_Deposit: "Failed to deposit some blocks!"
 
 Commands:
   Stacker_Already_Exists: "There already exists a stacker with identifier '{stacker_type}'"

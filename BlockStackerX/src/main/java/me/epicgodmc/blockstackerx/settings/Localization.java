@@ -31,6 +31,7 @@ public class Localization extends SimpleLocalization
         public static String NO_TYPE_FOUND;
         public static String STACKERTYPE_BROKEN;
         public static String STACKER_NO_PERMISSION;
+        public static String FAILED_TO_DEPOSIT;
 
         private static void init()
         {
@@ -55,6 +56,7 @@ public class Localization extends SimpleLocalization
             NO_TYPE_FOUND = getString("No_Type_Found");
             STACKERTYPE_BROKEN = getString("StackerType_Broken");
             STACKER_NO_PERMISSION = getString("Stacker_No_Permission");
+            FAILED_TO_DEPOSIT = getString("Failed_To_Deposit");
 
         }
     }

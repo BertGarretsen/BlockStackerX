@@ -22,6 +22,7 @@ public class Settings extends SimpleSettings
     public static Action STACKER_ADD_ACTION;
     public static Action STACKER_TAKE_ACTION;
     public static String STORAGE_TYPE;
+    public static String HOLOGRAM_PROVIDER_TYPE;
 
     private static void init()
     {
@@ -29,6 +30,7 @@ public class Settings extends SimpleSettings
         STACKER_ADD_ACTION = Enum.valueOf(Action.class, getString("Stacker_Add_Action"));
         STACKER_TAKE_ACTION = Enum.valueOf(Action.class, getString("Stacker_Take_Action"));
         STORAGE_TYPE = getString("StorageType");
+        HOLOGRAM_PROVIDER_TYPE = getString("HologramType");
     }
 
 }
