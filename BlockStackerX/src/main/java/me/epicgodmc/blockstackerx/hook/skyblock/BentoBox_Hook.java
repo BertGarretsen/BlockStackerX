@@ -21,6 +21,7 @@ import world.bentobox.bentobox.api.addons.Addon;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.events.BentoBoxEvent;
 import world.bentobox.bentobox.database.objects.Island;
+import world.bentobox.bentobox.managers.IslandsManager;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,7 +31,6 @@ public final class BentoBox_Hook implements SkyblockHook, Listener {
 
     private String addonName;
     private UUID cachedWorld;
-    //private World world;
 
     public BentoBox_Hook(String addon) {
         this.addonName = addon;
@@ -60,24 +60,6 @@ public final class BentoBox_Hook implements SkyblockHook, Listener {
             e.setKeyValues(keyValues);
         }
     }
-
-
-//    @EventHandler
-//    public void onWorldLoad(WorldLoadEvent e) {
-//        Optional<Addon> addon = BentoBox.getInstance().getAddonsManager().getAddonByName(addonName);
-//        addon.ifPresent((gm) ->
-//        {
-//            StackerPlugin.sendDebug("Found Addon: "+gm.getDescription().getName());
-//            StackerPlugin.sendDebug("Checking world");
-//            if (((GameModeAddon) gm).getOverWorld() != null) {
-//                StackerPlugin.sendDebug("Overworld: true");
-//                StackerPlugin.sendDebug("WorldName: "+((GameModeAddon)gm).getOverWorld().getName());
-//                this.world = ((GameModeAddon) gm).getOverWorld();
-//                StackerPlugin.sendDebug("Loaded Bentobox overworld");
-//                WorldLoadEvent.getHandlerList().unregister(this);
-//            }
-//        });
-//    }
 
 
     @Override

@@ -1,12 +1,10 @@
 package me.epicgodmc.blockstackerx;
 
 import lombok.Getter;
-import me.epicgodmc.blockstackerx.hook.hologram.HologramHook;
 import me.epicgodmc.blockstackerx.hook.hologram.HologramProviderType;
-import me.epicgodmc.blockstackerx.hook.hologram.HolographicDisplays_Hook;
-import me.epicgodmc.blockstackerx.hook.hologram.StackerHologram;
 import me.epicgodmc.blockstackerx.hook.skyblock.BentoBox_Hook;
 import me.epicgodmc.blockstackerx.hook.skyblock.SkyblockHook;
+import me.epicgodmc.blockstackerx.hook.hologram.StackerHologram;
 import me.epicgodmc.blockstackerx.settings.Settings;
 import me.epicgodmc.blockstackerx.stacker.StackerBlock;
 import org.bukkit.OfflinePlayer;
@@ -25,7 +23,7 @@ public class HookManager {
 
 
     @Getter private SkyblockHook skyblockHook;
-    @Getter private HologramHook hologramHook;
+    @Getter private HologramProviderType hologramProviderType;
 
 
     public HookManager(StackerPlugin plugin) {
@@ -57,36 +55,28 @@ public class HookManager {
 
         HologramProviderType provider = HologramProviderType.valueOf(Settings.HOLOGRAM_PROVIDER_TYPE.toUpperCase());
 
-        if (provider != HologramProviderType.CUSTOM)
-        {
-            if (Common.doesPluginExist("HolographicDisplays")) {
-                this.hologramHook = provider.getHook();
-                Common.log("Using HolographicDisplays as Hologram dependency!");
-            }
-        }else{
-            this.hologramHook = provider.getHook();
-            Common.log("Using Holograms provided by BlockStackerX");
-        }
+        this.hologramProviderType = provider;
+        Common.log(this.hologramProviderType.getEnableMessage());
 
     }
 
     protected boolean verify() {
         return skyblockHook != null &&
-                hologramHook != null;
+                hologramProviderType != null;
     }
 
     protected List<String> getMissingDependencies() {
         List<String> output = new ArrayList<>();
 
         if (skyblockHook == null) output.add("Skyblock");
-        if (hologramHook == null) output.add("Hologram");
+        if (hologramProviderType == null) output.add("Hologram");
 
 
         return output;
     }
 
     public StackerHologram getNewHologram(String format) {
-        return new StackerHologram(hologramHook, format);
+        return this.hologramProviderType.getHologram(format);
     }
 
 

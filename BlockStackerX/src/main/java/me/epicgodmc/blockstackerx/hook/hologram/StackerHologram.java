@@ -1,44 +1,35 @@
 package me.epicgodmc.blockstackerx.hook.hologram;
 
+import lombok.Getter;
 import org.bukkit.Location;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.mineacademy.fo.Common;
 
-public class StackerHologram {
+/**
+ * Created by Bert on 16 Oct 2021
+ * Copyright © EpicGodMC
+ */
+@Getter
+public abstract class StackerHologram
+{
 
-    private final HologramHook hookInstance;
+
     private final String format;
-    private Object hologram;
 
-
-    public StackerHologram(HologramHook hookInstance, String format) {
-        this.hookInstance = hookInstance;
+    public StackerHologram(String format) {
         this.format = format;
     }
 
-
-    public void create(int value, Location location) {
-        Common.runLater(new BukkitRunnable() {
-            Object hologram;
-
-            @Override
-            public void run() {
-                hologram = hookInstance.createHologram(location, Common.toList(format.replace("{value}", String.valueOf(value))));
-                StackerHologram.this.hologram = hologram;
-            }
-        });
+    public String getFormatReplaced(int amount)
+    {
+        return getFormat().replace("{value}", String.valueOf(amount));
     }
 
+    public abstract void create(int value, Location location);
 
-    public void update(int value) {
-        this.update(0, format.replace("{value}", String.valueOf(value)));
-    }
+    public abstract boolean isSpawned();
 
-    public void update(int line, String text) {
-        this.hologram = hookInstance.updateLine(hologram, line, text);
-    }
+    public abstract void update(int newValue);
 
-    public void delete() {
-        hookInstance.deleteHologram(hologram);
-    }
+    public abstract void update(int line, String text);
+
+    public abstract void delete();
 }

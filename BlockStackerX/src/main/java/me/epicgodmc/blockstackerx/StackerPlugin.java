@@ -18,6 +18,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.mineacademy.fo.ASCIIUtil;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.metrics.Metrics;
+import org.mineacademy.fo.model.SimpleHologram;
 import org.mineacademy.fo.plugin.SimplePlugin;
 import org.mineacademy.fo.settings.YamlStaticConfig;
 
@@ -60,6 +62,8 @@ public final class StackerPlugin extends SimplePlugin {
             new WorthSettings();
             Common.logNoPrefix("Loaded files");
 
+            new Metrics(this, 13038);
+
 
             Common.logNoPrefix(String.format("Loaded BlockStackerX in %s MS", System.currentTimeMillis() - time));
         } else {
@@ -74,13 +78,13 @@ public final class StackerPlugin extends SimplePlugin {
         if (shutdown) return;
 
         this.islandStorage.saveAll();
-        this.getHookManager().getHologramHook().disable();
+        SimpleHologram.deleteAll();
     }
 
     @Override
     protected void onPluginReload() {
         IslandCache.saveAndUnloadAll();
-        this.getHookManager().getHologramHook().disable();
+        SimpleHologram.deleteAll();
 
         registerCommands();
         StackerRegister.getInstance().loadSettingFiles();
