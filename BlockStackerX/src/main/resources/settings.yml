@@ -33,8 +33,7 @@ Prefix: "&6&lBlockStackerX &7"
 StorageType: "BYTE"
 
 # HD_DISPLAYS (Will attempt to hook into Holographic displays)
-# CUSTOM (Will use hologram provided by BlockStackerX)
-HologramType: "CUSTOM"
+HologramType: "HD_DISPLAYS"
 
 Stacker_Add_Action: "RIGHT_CLICK_BLOCK"
 Stacker_Take_Action: "LEFT_CLICK_BLOCK"

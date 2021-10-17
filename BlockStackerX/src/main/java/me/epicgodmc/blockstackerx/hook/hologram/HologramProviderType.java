@@ -9,9 +9,7 @@ import me.epicgodmc.blockstackerx.hook.hologram.impl.HDStackerHologram;
  */
 public enum HologramProviderType {
 
-    HD_DISPLAYS("Using Holographic-Displays as hologram dependency"),
-    CUSTOM("Using custom holograms provided by BlockStackerX");
-
+    HD_DISPLAYS("Using Holographic-Displays as hologram dependency");
     @Getter
     String enableMessage;
 
@@ -26,10 +24,6 @@ public enum HologramProviderType {
         if (this == HD_DISPLAYS)
         {
             return new HDStackerHologram(format);
-        }
-        if (this == CUSTOM)
-        {
-            //TODO
         }
         return null;
     }

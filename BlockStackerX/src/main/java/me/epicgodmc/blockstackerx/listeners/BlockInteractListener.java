@@ -1,12 +1,12 @@
 package me.epicgodmc.blockstackerx.listeners;
 
-import me.epicgodmc.blockstackerx.stacker.StackerBlock;
 import me.epicgodmc.blockstackerx.StackerPlugin;
 import me.epicgodmc.blockstackerx.menu.StackerMenu;
 import me.epicgodmc.blockstackerx.settings.Localization;
 import me.epicgodmc.blockstackerx.settings.Settings;
 import me.epicgodmc.blockstackerx.settings.StackerRegister;
 import me.epicgodmc.blockstackerx.settings.StackerSettings;
+import me.epicgodmc.blockstackerx.stacker.StackerBlock;
 import me.epicgodmc.blockstackerx.stacker.StackerPermission;
 import me.epicgodmc.blockstackerx.storage.IslandCache;
 import me.epicgodmc.blockstackerx.util.StackerUtils;
@@ -21,9 +21,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.ItemUtil;
-import org.mineacademy.fo.PlayerUtil;
 import org.mineacademy.fo.Valid;
-import org.mineacademy.fo.model.Replacer;
 import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.remain.Remain;
 
@@ -92,8 +90,7 @@ public class BlockInteractListener implements Listener {
 
         Player player = e.getPlayer();
 
-        if (!Valid.checkPermission(player, "blockstackerx.stacker.add"))
-        {
+        if (!Valid.checkPermission(player, "blockstackerx.stacker.add")) {
             return;
         }
 
@@ -178,8 +175,7 @@ public class BlockInteractListener implements Listener {
     private void handleSub(PlayerInteractEvent e, StackerBlock stackerBlock) {
         Player player = e.getPlayer();
 
-        if (!Valid.checkPermission(player, "blockstackerx.stacker.subtract"))
-        {
+        if (!Valid.checkPermission(player, "blockstackerx.stacker.subtract")) {
             return;
         }
 
