@@ -161,9 +161,6 @@ public class StorageBenchmark {
     }
 
 
-    // 1 = byte
-    // 0 = json
-    // 2 = both
     private static void writeData(int i) {
         List<DataObject> data = new ArrayList<>();
 

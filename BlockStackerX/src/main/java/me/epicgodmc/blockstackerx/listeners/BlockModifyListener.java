@@ -45,10 +45,9 @@ public class BlockModifyListener implements Listener {
 
     @EventHandler
     public void pistonExtend(BlockPistonExtendEvent e) {
-
         for (Block block : e.getBlocks()) {
             if (isStacker(block)){
-                e.getBlocks().remove(block);
+                e.setCancelled(true);
                 return;
             }
         }
@@ -58,7 +57,7 @@ public class BlockModifyListener implements Listener {
     public void pisonRetract(BlockPistonRetractEvent e) {
         for (Block block : e.getBlocks()) {
             if (isStacker(block)){
-                e.getBlocks().remove(block);
+                e.setCancelled(true);
                 return;
             }
         }
