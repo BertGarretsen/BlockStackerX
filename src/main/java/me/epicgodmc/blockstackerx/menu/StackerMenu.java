@@ -1,10 +1,10 @@
 package me.epicgodmc.blockstackerx.menu;
 
-import me.epicgodmc.blockstackerx.menu.common.PermableButtonMenu;
-import me.epicgodmc.blockstackerx.stacker.StackerBlock;
 import me.epicgodmc.blockstackerx.menu.common.DefinedButton;
+import me.epicgodmc.blockstackerx.menu.common.PermableButtonMenu;
 import me.epicgodmc.blockstackerx.settings.Localization;
 import me.epicgodmc.blockstackerx.settings.common.InventorySettings;
+import me.epicgodmc.blockstackerx.stacker.StackerBlock;
 import me.epicgodmc.blockstackerx.stacker.StackerPermission;
 import me.epicgodmc.blockstackerx.util.InventoryItem;
 import me.epicgodmc.blockstackerx.util.InventoryUtils;

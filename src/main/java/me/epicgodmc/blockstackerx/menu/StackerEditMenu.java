@@ -1,6 +1,9 @@
 package me.epicgodmc.blockstackerx.menu;
 
-import me.epicgodmc.blockstackerx.conversation.stacker.*;
+import me.epicgodmc.blockstackerx.conversation.stacker.AvailableBlocksConversation;
+import me.epicgodmc.blockstackerx.conversation.stacker.MaxStorageConversation;
+import me.epicgodmc.blockstackerx.conversation.stacker.OffsetConversation;
+import me.epicgodmc.blockstackerx.conversation.stacker.ValueFormatConversation;
 import me.epicgodmc.blockstackerx.menu.common.DecorationButton;
 import me.epicgodmc.blockstackerx.settings.StackerRegister;
 import me.epicgodmc.blockstackerx.settings.StackerSettings;

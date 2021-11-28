@@ -2,9 +2,9 @@ package me.epicgodmc.blockstackerx;
 
 import lombok.Getter;
 import me.epicgodmc.blockstackerx.hook.hologram.HologramProviderType;
+import me.epicgodmc.blockstackerx.hook.hologram.StackerHologram;
 import me.epicgodmc.blockstackerx.hook.skyblock.BentoBox_Hook;
 import me.epicgodmc.blockstackerx.hook.skyblock.SkyblockHook;
-import me.epicgodmc.blockstackerx.hook.hologram.StackerHologram;
 import me.epicgodmc.blockstackerx.settings.Settings;
 import me.epicgodmc.blockstackerx.stacker.StackerBlock;
 import org.bukkit.OfflinePlayer;

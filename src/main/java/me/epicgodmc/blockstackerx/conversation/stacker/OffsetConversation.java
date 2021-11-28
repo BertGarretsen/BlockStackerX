@@ -1,14 +1,12 @@
 package me.epicgodmc.blockstackerx.conversation.stacker;
 
 import me.epicgodmc.blockstackerx.conversation.StackerConversation;
-import me.epicgodmc.blockstackerx.menu.StackerEditMenu;
 import me.epicgodmc.blockstackerx.settings.StackerSettings;
 import me.epicgodmc.blockstackerx.util.Offset;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mineacademy.fo.Common;
 import org.mineacademy.fo.conversation.SimplePrompt;
 
 public class OffsetConversation extends StackerConversation {

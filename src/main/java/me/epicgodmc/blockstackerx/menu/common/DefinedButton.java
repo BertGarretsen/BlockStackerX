@@ -1,9 +1,6 @@
 package me.epicgodmc.blockstackerx.menu.common;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
-import org.mineacademy.fo.menu.Menu;
 import org.mineacademy.fo.menu.button.Button;
 
 /**

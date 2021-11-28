@@ -1,6 +1,5 @@
 package me.epicgodmc.blockstackerx.settings;
 
-import me.epicgodmc.blockstackerx.storage.IslandStorageType;
 import org.bukkit.event.block.Action;
 import org.mineacademy.fo.settings.SimpleSettings;
 
