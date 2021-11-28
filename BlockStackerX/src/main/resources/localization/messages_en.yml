@@ -9,6 +9,7 @@ Stacker_Actions:
   Stacker_Broken: "Stacker Broken!"
   Inventory_Interact_Failed: "You failed to interact with a valid block in under 10 seconds"
   No_Island_Found: "You must be a member of an island to interact with stackers."
+  No_Island_Found_At_Location: "You can only do this inside an island!"
   Material_Contains_NBT: "The block you are holding contains Nbt-Data"
   Stacker_No_Permission: "You don't have permission from the owner to perform this action."
   No_Permission: "You don't have permission to modify this stacker!"

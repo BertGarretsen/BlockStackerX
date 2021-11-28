@@ -24,6 +24,10 @@ import org.mineacademy.fo.ItemUtil;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.remain.Remain;
+import world.bentobox.bentobox.BentoBox;
+import world.bentobox.bentobox.database.objects.Island;
+
+import java.util.Optional;
 
 
 /**
@@ -39,44 +43,85 @@ public class BlockInteractListener implements Listener {
     }
 
     @EventHandler
-    public void onBlockInteract(PlayerInteractEvent e) {
+    public void onBlockInteractNew(PlayerInteractEvent e) {
         if (!e.hasBlock()) return;
         if (!Remain.isInteractEventPrimaryHand(e)) return;
-        if (!plugin.getHookManager().getSkyblockHook().hasIsland(e.getPlayer())) return;
 
-        Block b = e.getClickedBlock();
-        if (b == null) return;
+        Block block = e.getClickedBlock();
+        if (block == null) return;
 
-        IslandCache islandCache = IslandCache.getCache(plugin.getHookManager().getIslandID(e.getPlayer()));
+        Optional<Island> optionalIsland = BentoBox.getInstance().getIslandsManager().getIslandAt(block.getLocation());
+        if (optionalIsland.isPresent()) {
+            Island island = optionalIsland.get();
+            IslandCache cache = IslandCache.getCache(island.getUniqueId());
 
-        if (islandCache.hasStackerAt(b.getLocation())) {
-            e.setCancelled(true);
-            Action action = e.getAction();
-            StackerBlock stackerBlock = islandCache.getStackerAt(b.getLocation());
+            if (cache.hasStackerAt(block.getLocation())) {
+                e.setCancelled(true);
+                Action action = e.getAction();
+                StackerBlock stackerBlock = cache.getStackerAt(block.getLocation());
 
-            if (stackerBlock == null) {
-                Common.tell(e.getPlayer(), Localization.Stacker_Actions.ERROR);
-                return;
-            }
-
-            if (action == Settings.STACKER_ADD_ACTION) {
-                if (!e.hasItem() || !e.getItem().getType().isBlock()) {
-
-                    if (!stackerBlock.hasPermission(e.getPlayer(), StackerPermission.OPEN_STACKER)) {
-                        Common.tell(e.getPlayer(), Localization.Stacker_Actions.STACKER_NO_PERMISSION);
-                        return;
-                    }
-
-                    StackerMenu menu = new StackerMenu(e.getPlayer().getUniqueId(), stackerBlock);
-                    menu.displayTo(e.getPlayer());
+                if (stackerBlock == null) {
+                    Common.tell(e.getPlayer(), Localization.Stacker_Actions.ERROR);
                     return;
-                } else handleAdd(e, stackerBlock, e.getItem());
-            }
-            if (action == Settings.STACKER_TAKE_ACTION) {
-                handleSub(e, stackerBlock);
+                }
+
+                if (action == Settings.STACKER_ADD_ACTION) {
+                    if (e.getItem() == null || !e.getItem().getType().isBlock()) {
+                        if (!stackerBlock.hasPermission(e.getPlayer(), StackerPermission.OPEN_STACKER)) {
+                            Common.tell(e.getPlayer(), Localization.Stacker_Actions.STACKER_NO_PERMISSION);
+                            return;
+                        }
+                        StackerMenu menu = new StackerMenu(e.getPlayer().getUniqueId(), stackerBlock);
+                        menu.displayTo(e.getPlayer());
+                        return;
+                    } else handleAdd(e, stackerBlock, e.getItem());
+                }
+                if (action == Settings.STACKER_TAKE_ACTION) {
+                    handleSub(e, stackerBlock);
+                }
             }
         }
     }
+
+//    @EventHandler
+//    public void onBlockInteract(PlayerInteractEvent e) {
+//        if (!e.hasBlock()) return;
+//        if (!Remain.isInteractEventPrimaryHand(e)) return;
+//        if (!plugin.getHookManager().getSkyblockHook().hasIsland(e.getPlayer())) return;
+//
+//        Block b = e.getClickedBlock();
+//        if (b == null) return;
+//
+//        IslandCache islandCache = IslandCache.getCache(plugin.getHookManager().getIslandID(e.getPlayer()));
+//
+//        if (islandCache.hasStackerAt(b.getLocation())) {
+//            e.setCancelled(true);
+//            Action action = e.getAction();
+//            StackerBlock stackerBlock = islandCache.getStackerAt(b.getLocation());
+//
+//            if (stackerBlock == null) {
+//                Common.tell(e.getPlayer(), Localization.Stacker_Actions.ERROR);
+//                return;
+//            }
+//
+//            if (action == Settings.STACKER_ADD_ACTION) {
+//                if (!e.hasItem() || !e.getItem().getType().isBlock()) {
+//
+//                    if (!stackerBlock.hasPermission(e.getPlayer(), StackerPermission.OPEN_STACKER)) {
+//                        Common.tell(e.getPlayer(), Localization.Stacker_Actions.STACKER_NO_PERMISSION);
+//                        return;
+//                    }
+//
+//                    StackerMenu menu = new StackerMenu(e.getPlayer().getUniqueId(), stackerBlock);
+//                    menu.displayTo(e.getPlayer());
+//                    return;
+//                } else handleAdd(e, stackerBlock, e.getItem());
+//            }
+//            if (action == Settings.STACKER_TAKE_ACTION) {
+//                handleSub(e, stackerBlock);
+//            }
+//        }
+//    }
 
 
     /**

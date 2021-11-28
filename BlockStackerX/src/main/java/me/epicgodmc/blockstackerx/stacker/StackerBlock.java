@@ -25,10 +25,13 @@ import org.mineacademy.fo.Common;
 import org.mineacademy.fo.PlayerUtil;
 import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.remain.Remain;
+import world.bentobox.bentobox.BentoBox;
+import world.bentobox.bentobox.database.objects.Island;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class StackerBlock implements BaosSerializer, BaosDeserializer {
@@ -104,7 +107,9 @@ public class StackerBlock implements BaosSerializer, BaosDeserializer {
     public void delete() {
         unload();
         this.location.setBlock(Material.AIR);
-        IslandCache.getCache(StackerPlugin.getInstance().getHookManager().getIslandID(getPlayerOwner())).deleteStacker(location);
+
+        Optional<Island> optIsland = BentoBox.getInstance().getIslandsManager().getIslandAt(this.location.toLocation());
+        optIsland.ifPresent(island -> IslandCache.getCache(island.getUniqueId()).deleteStacker(location));
     }
 
     public int getSpaceLeft() {

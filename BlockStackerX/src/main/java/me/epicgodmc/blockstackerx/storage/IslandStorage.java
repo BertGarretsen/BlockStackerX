@@ -13,6 +13,8 @@ public interface IslandStorage {
 
     void saveAll();
 
+    void delete(String uuid);
+
     IslandCache load(String uuid);
 
 }

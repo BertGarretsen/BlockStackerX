@@ -94,6 +94,14 @@ public class ByteIslandStorage implements IslandStorage {
         });
     }
 
+    @Override
+    public void delete(String uuid) {
+        try {
+            Files.delete(storage.resolve(uuid + ".dat"));
+        } catch (IOException ignored) {
+        }
+    }
+
     /**
      * Creates a dat file for the IslandCache if it does not exist
      * Automatically creates parent file if it does not exist
@@ -108,4 +116,5 @@ public class ByteIslandStorage implements IslandStorage {
             Files.createFile(storage);
         }
     }
+
 }

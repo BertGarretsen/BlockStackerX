@@ -114,6 +114,17 @@ public class IslandCache {
     }
 
     /**
+     * Deletes the file and this islandcache
+     */
+    public static void delete(String uuid)
+    {
+        IslandCache cache = getCache(uuid);
+        cache.getStackers().values().forEach(StackerBlock::unload);
+        StackerPlugin.getInstance().getIslandStorage().delete(uuid);
+        cacheMap.remove(uuid);
+    }
+
+    /**
      * Saves the object to its file
      */
     public void save() throws IOException {

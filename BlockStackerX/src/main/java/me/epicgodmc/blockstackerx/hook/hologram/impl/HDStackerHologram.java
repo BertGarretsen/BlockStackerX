@@ -43,6 +43,7 @@ public class HDStackerHologram extends StackerHologram {
         }
     }
 
+
     @Override
     public void delete() {
         hologram.delete();

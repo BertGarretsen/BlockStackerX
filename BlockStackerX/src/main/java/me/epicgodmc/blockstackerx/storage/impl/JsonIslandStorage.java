@@ -51,6 +51,14 @@ public class JsonIslandStorage implements IslandStorage {
         });
     }
 
+    @Override
+    public void delete(String uuid) {
+        try {
+            Files.delete(storage.resolve(uuid + ".dat"));
+        } catch (IOException ignored) {
+        }
+    }
+
 
     /**
      * Creates a json file for the IslandCache if it does not exist

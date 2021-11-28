@@ -1,30 +1,24 @@
 package me.epicgodmc.blockstackerx.hook.skyblock;
 
-import me.epicgodmc.blockstackerx.stacker.StackerBlock;
 import me.epicgodmc.blockstackerx.StackerPlugin;
 import me.epicgodmc.blockstackerx.settings.StackerRegister;
+import me.epicgodmc.blockstackerx.stacker.StackerBlock;
 import me.epicgodmc.blockstackerx.storage.IslandCache;
-import me.epicgodmc.blockstackerx.util.StackerLocation;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.world.WorldLoadEvent;
 import org.mineacademy.fo.PlayerUtil;
-import org.mineacademy.fo.collection.StrictMap;
 import org.mineacademy.fo.remain.Remain;
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.addons.Addon;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.events.BentoBoxEvent;
 import world.bentobox.bentobox.database.objects.Island;
-import world.bentobox.bentobox.managers.IslandsManager;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public final class BentoBox_Hook implements SkyblockHook, Listener {
 
@@ -37,28 +31,45 @@ public final class BentoBox_Hook implements SkyblockHook, Listener {
         StackerPlugin.getInstance().registerListener(this);
     }
 
-
     @EventHandler
     public void onLevelCalculate(BentoBoxEvent e) {
         Map<String, Object> keyValues = e.getKeyValues();
-        if ("IslandLevelCalculatedEvent".equals(e.getEventName()))
-        {
-            Island island = (Island) keyValues.get("island");
-            long level = (long) keyValues.get("level");
-            IslandCache islandCache = IslandCache.getCache(island.getUniqueId());
 
-            Collection<StackerBlock> stackers = islandCache.getStackers().values();
+        switch (e.getEventName()) {
+            case "IslandLevelCalculatedEvent":
+                keyValues = handleIslandLevelCalculate(keyValues);
+                break;
 
-            for (StackerBlock stacker : stackers) {
-                if (stacker.hasStackMaterial())
-                {
-                    double stackerLevels = stacker.calculateLevels();
-                    level += stackerLevels;
-                }
-            }
-            keyValues.put("level", level);
-            e.setKeyValues(keyValues);
+            case "IslandDeleteEvent":
+                handleIslandDelete(keyValues);
+                break;
+
         }
+
+        e.setKeyValues(keyValues);
+    }
+
+    private void handleIslandDelete(Map<String, Object> keyValues) {
+        Island island = (Island) keyValues.get("island");
+        IslandCache.delete(island.getUniqueId());
+    }
+
+
+    private Map<String, Object> handleIslandLevelCalculate(Map<String, Object> keyValues) {
+        Island island = (Island) keyValues.get("island");
+        long level = (long) keyValues.get("level");
+        IslandCache islandCache = IslandCache.getCache(island.getUniqueId());
+
+        Collection<StackerBlock> stackers = islandCache.getStackers().values();
+
+        for (StackerBlock stacker : stackers) {
+            if (stacker.hasStackMaterial()) {
+                double stackerLevels = stacker.calculateLevels();
+                level += stackerLevels;
+            }
+        }
+        keyValues.put("level", level);
+        return keyValues;
     }
 
 
@@ -107,19 +118,16 @@ public final class BentoBox_Hook implements SkyblockHook, Listener {
         return island.getUniqueId();
     }
 
-    public World getWorld()
-    {
-        if (cachedWorld == null)
-        {
+    public World getWorld() {
+        if (cachedWorld == null) {
             Optional<World> world = Bukkit.getWorlds().stream().filter(this::isCorrectWorld).findFirst();
             return world.orElse(null);
-        }else{
+        } else {
             return Bukkit.getWorld(cachedWorld);
         }
     }
 
-    public boolean isCorrectWorld(World world)
-    {
+    public boolean isCorrectWorld(World world) {
         Optional<Addon> addon = BentoBox.getInstance().getAddonsManager().getAddonByName(addonName);
         return addon.filter(value -> ((GameModeAddon) value).inWorld(world)).isPresent();
     }

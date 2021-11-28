@@ -25,6 +25,7 @@ public class Localization extends SimpleLocalization
         public static String ERROR;
         public static String MATERIAL_CONTAINS_NBT;
         public static String NO_ISLAND_FOUND;
+        public static String NO_ISLAND_FOUND_AT_LOCATION;
         public static String INVENTORY_INTERACT_FAILED;
         public static String STACKER_BREAK_NO_PICKAXE;
         public static String NO_BLOCK_IN_HAND;
@@ -50,6 +51,7 @@ public class Localization extends SimpleLocalization
             ERROR = getString("Error");
             MATERIAL_CONTAINS_NBT = getString("Material_Contains_NBT");
             NO_ISLAND_FOUND = getString("No_Island_Found");
+            NO_ISLAND_FOUND_AT_LOCATION = getString("No_Island_Found_At_Location");
             INVENTORY_INTERACT_FAILED = getString("Inventory_Interact_Failed");
             STACKER_BREAK_NO_PICKAXE = getString("Stacker_Broken_No_Pickaxe");
             NO_BLOCK_IN_HAND = getString("No_Block_In_Hand");

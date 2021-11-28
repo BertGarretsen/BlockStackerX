@@ -54,7 +54,7 @@ public class BlockModifyListener implements Listener {
     }
 
     @EventHandler
-    public void pisonRetract(BlockPistonRetractEvent e) {
+    public void pistonRetract(BlockPistonRetractEvent e) {
         for (Block block : e.getBlocks()) {
             if (isStacker(block)){
                 e.setCancelled(true);

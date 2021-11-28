@@ -11,12 +11,15 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.mineacademy.fo.RandomUtil;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.remain.Remain;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -38,8 +41,7 @@ public class StackerLocation implements Cloneable {
         this.z = z;
     }
 
-    public StackerLocation(@NotNull Block block)
-    {
+    public StackerLocation(@NotNull Block block) {
         Location l = block.getLocation();
 
         this.world = l.getWorld().getUID();
@@ -79,7 +81,7 @@ public class StackerLocation implements Cloneable {
         int z = object.get("z").getAsInt();
         UUID world = UUID.fromString(object.get("world").getAsString());
 
-        return new StackerLocation(world, x, y ,z);
+        return new StackerLocation(world, x, y, z);
     }
 
 
@@ -87,18 +89,15 @@ public class StackerLocation implements Cloneable {
         return new Location(getBukkitWorld(), x + this.x, y + this.y, z + this.z);
     }
 
-    public  void setBlock(Material material)
-    {
-        Remain.setTypeAndData(getBlock(), material, (byte) 0,  false);
+    public void setBlock(Material material) {
+        Remain.setTypeAndData(getBlock(), material, (byte) 0, false);
     }
 
-    public Block getBlock()
-    {
+    public Block getBlock() {
         return toLocation().getBlock();
     }
 
-    public Location toLocation(Offset offset)
-    {
+    public Location toLocation(Offset offset) {
         return toLocation(offset.getX(), offset.getY(), offset.getZ());
     }
 
@@ -111,6 +110,10 @@ public class StackerLocation implements Cloneable {
         return Bukkit.getWorld(world);
     }
 
+    public Collection<Entity> getNearbyEntities(int radiusX, int radiusY, int radiusZ) {
+        return getBukkitWorld().getNearbyEntities(toLocation(), radiusX, radiusY, radiusZ);
+    }
+
 
     public void serialize(BaosOutputStream out) throws IOException {
         out.writeUUID(this.world);
@@ -119,8 +122,7 @@ public class StackerLocation implements Cloneable {
         out.writeInt(z);
     }
 
-    public static StackerLocation randomLocation()
-    {
+    public static StackerLocation randomLocation() {
         return new StackerLocation(UUID.randomUUID(), RandomUtil.nextBetween(0, 100), RandomUtil.nextBetween(0, 100), RandomUtil.nextBetween(0, 100));
     }
 
