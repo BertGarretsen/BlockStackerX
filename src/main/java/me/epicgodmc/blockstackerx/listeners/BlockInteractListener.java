@@ -43,7 +43,7 @@ public class BlockInteractListener implements Listener {
     }
 
     @EventHandler
-    public void onBlockInteractNew(PlayerInteractEvent e) {
+    public void onBlockInteract(PlayerInteractEvent e) {
         if (!e.hasBlock()) return;
         if (!Remain.isInteractEventPrimaryHand(e)) return;
 
@@ -82,47 +82,6 @@ public class BlockInteractListener implements Listener {
             }
         }
     }
-
-//    @EventHandler
-//    public void onBlockInteract(PlayerInteractEvent e) {
-//        if (!e.hasBlock()) return;
-//        if (!Remain.isInteractEventPrimaryHand(e)) return;
-//        if (!plugin.getHookManager().getSkyblockHook().hasIsland(e.getPlayer())) return;
-//
-//        Block b = e.getClickedBlock();
-//        if (b == null) return;
-//
-//        IslandCache islandCache = IslandCache.getCache(plugin.getHookManager().getIslandID(e.getPlayer()));
-//
-//        if (islandCache.hasStackerAt(b.getLocation())) {
-//            e.setCancelled(true);
-//            Action action = e.getAction();
-//            StackerBlock stackerBlock = islandCache.getStackerAt(b.getLocation());
-//
-//            if (stackerBlock == null) {
-//                Common.tell(e.getPlayer(), Localization.Stacker_Actions.ERROR);
-//                return;
-//            }
-//
-//            if (action == Settings.STACKER_ADD_ACTION) {
-//                if (!e.hasItem() || !e.getItem().getType().isBlock()) {
-//
-//                    if (!stackerBlock.hasPermission(e.getPlayer(), StackerPermission.OPEN_STACKER)) {
-//                        Common.tell(e.getPlayer(), Localization.Stacker_Actions.STACKER_NO_PERMISSION);
-//                        return;
-//                    }
-//
-//                    StackerMenu menu = new StackerMenu(e.getPlayer().getUniqueId(), stackerBlock);
-//                    menu.displayTo(e.getPlayer());
-//                    return;
-//                } else handleAdd(e, stackerBlock, e.getItem());
-//            }
-//            if (action == Settings.STACKER_TAKE_ACTION) {
-//                handleSub(e, stackerBlock);
-//            }
-//        }
-//    }
-
 
     /**
      * Handles the adding of blocks to the stacker
