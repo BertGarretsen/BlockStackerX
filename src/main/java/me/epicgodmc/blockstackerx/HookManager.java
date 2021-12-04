@@ -19,15 +19,12 @@ import java.util.List;
 
 public class HookManager {
 
-    private StackerPlugin plugin;
-
 
     @Getter private SkyblockHook skyblockHook;
     @Getter private HologramProviderType hologramProviderType;
 
 
-    public HookManager(StackerPlugin plugin) {
-        this.plugin = plugin;
+    public HookManager() {
         if (Common.doesPluginExist("BentoBox")) {
             AddonsManager addonsManager = BentoBox.getInstance().getAddonsManager();
             String chosenAddon = "na";
@@ -53,9 +50,7 @@ public class HookManager {
             this.skyblockHook = new BentoBox_Hook(chosenAddon);
         }
 
-        HologramProviderType provider = HologramProviderType.valueOf(Settings.HOLOGRAM_PROVIDER_TYPE.toUpperCase());
-
-        this.hologramProviderType = provider;
+        this.hologramProviderType = HologramProviderType.valueOf(Settings.HOLOGRAM_PROVIDER_TYPE.toUpperCase());
         Common.log(this.hologramProviderType.getEnableMessage());
 
     }

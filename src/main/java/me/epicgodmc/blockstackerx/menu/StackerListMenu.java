@@ -21,39 +21,23 @@ public class StackerListMenu extends MenuPagged<StackerSettings> {
     @Override
     protected ItemStack convertToItemStack(StackerSettings settings) {
         String fancyState = ItemUtil.bountifyCapitalized(settings.getState());
-        switch (settings.getState()) {
-            case ACTIVE:
-                return ItemCreator
-                        .of(CompMaterial.fromItem(settings.getNewStacker())
-                                , "&a&l" + settings.getIdentifier() + " &8((&a" + fancyState + "&8))"
-                                , ""
-                                , "&7((&aLeft-click&7)) to spawn new stacker"
-                                , "&7((&aRight-Click&7)) to edit stacker settings")
-                        .build().make();
-            default:
-                return ItemCreator
-                        .of(settings.getDefaultMaterial()
-                                , "&c&l" + settings.getIdentifier() + " &8((&c" + fancyState + "&8))"
-                                , ""
-                                , "&7((&cLeft-click&7)) to spawn new stacker"
-                                , "&7((&cRight-Click&7)) to edit stacker settings")
-                        .build().make();
-
+        if (settings.getState() == StackerSettings.State.ACTIVE) {
+            return ItemCreator
+                    .of(CompMaterial.fromItem(settings.getNewStacker())
+                            , "&a&l" + settings.getIdentifier() + " &8((&a" + fancyState + "&8))"
+                            , ""
+                            , "&7((&aLeft-click&7)) to spawn new stacker"
+                            , "&7((&aRight-Click&7)) to edit stacker settings")
+                    .build().make();
         }
+        return ItemCreator
+                .of(settings.getDefaultMaterial()
+                        , "&c&l" + settings.getIdentifier() + " &8((&c" + fancyState + "&8))"
+                        , ""
+                        , "&7((&cLeft-click&7)) to spawn new stacker"
+                        , "&7((&cRight-Click&7)) to edit stacker settings")
+                .build().make();
     }
-
-//    @Override
-//    protected ItemStack convertToItemStack(StackerSettings settings) {
-//        return ItemCreator
-//                .of(settings.getDefaultMaterial()
-//                        , "&c&l" + settings.getIdentifier()
-//                        , ""
-//                        , "&7((&cLeft-click&7)) to spawn new stacker"
-//                        , "&7((&cRight-Click&7)) to edit stacker settings"
-//                        , ""
-//                        ,"&7State: &c"+settings.getState().name())
-//                .build().make();
-//    }
 
     @Override
     protected void onPageClick(Player player, StackerSettings settings, ClickType click) {

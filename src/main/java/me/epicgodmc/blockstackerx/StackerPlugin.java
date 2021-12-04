@@ -49,7 +49,7 @@ public final class StackerPlugin extends SimplePlugin {
         instance = this;
         Common.logNoPrefix(Common.configLine());
         Common.logNoPrefix(getLogo());
-        this.hookManager = new HookManager(this);
+        this.hookManager = new HookManager();
         if (this.hookManager.verify()) {
             this.islandStorage = IslandStorageType.valueOf(Settings.STORAGE_TYPE).getStorage();
             Common.logNoPrefix("Storage type has been set to: " + Settings.STORAGE_TYPE);

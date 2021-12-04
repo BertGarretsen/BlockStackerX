@@ -11,7 +11,5 @@ import org.mineacademy.fo.menu.button.Button;
  */
 public abstract class DecorationButton extends Button {
     @Override
-    public void onClickedInMenu(Player player, Menu menu, ClickType click) {
-
-    }
+    public void onClickedInMenu(Player player, Menu menu, ClickType click) {}
 }

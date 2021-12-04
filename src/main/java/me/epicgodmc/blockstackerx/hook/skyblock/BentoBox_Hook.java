@@ -121,6 +121,7 @@ public final class BentoBox_Hook implements SkyblockHook, Listener {
     public World getWorld() {
         if (cachedWorld == null) {
             Optional<World> world = Bukkit.getWorlds().stream().filter(this::isCorrectWorld).findFirst();
+            world.ifPresent((e) -> this.cachedWorld = e.getUID());
             return world.orElse(null);
         } else {
             return Bukkit.getWorld(cachedWorld);
