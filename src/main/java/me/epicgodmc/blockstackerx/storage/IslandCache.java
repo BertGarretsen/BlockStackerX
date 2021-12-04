@@ -38,6 +38,8 @@ public class IslandCache {
     @Getter private final String UUID;
     @Getter @Setter private StrictMap<StackerLocation, StackerBlock> stackers;
 
+    @Getter private final Object saveLock = new Object();
+
 
     public IslandCache(String islandUUID) {
         this.UUID = islandUUID;
@@ -128,7 +130,9 @@ public class IslandCache {
      * Saves the object to its file
      */
     public void save() throws IOException {
-        StackerPlugin.getInstance().getIslandStorage().save(this);
+        synchronized (this.saveLock) {
+            StackerPlugin.getInstance().getIslandStorage().save(this);
+        }
     }
 
     public static void saveAndUnloadAll() {

@@ -73,7 +73,7 @@ public class StackerBlock implements BaosSerializer, BaosDeserializer {
         PersistentDataContainer container = new CustomBlockData(location.getBlock(), StackerPlugin.getInstance());
         container.set(Global.STACKER_KEY, PersistentDataType.BYTE, (byte) 0);
 
-        this.stackerHologram = StackerPlugin.getInstance().getHookManager().getNewHologram(settings.getValueFormat());
+        this.stackerHologram = StackerPlugin.getInstance().getHookManager().getNewHologram(settings.getValueFormat(), this);
         this.stackerHologram.create(this.value, settings.getHologramOffset().calc(location));
     }
 
@@ -243,7 +243,7 @@ public class StackerBlock implements BaosSerializer, BaosDeserializer {
         this.settings = StackerRegister.getInstance().getSettings(identifier);
 
         if (this.settings != null) {
-            this.stackerHologram = StackerPlugin.getInstance().getHookManager().getNewHologram(settings.getValueFormat());
+            this.stackerHologram = StackerPlugin.getInstance().getHookManager().getNewHologram(settings.getValueFormat(), this);
             this.stackerHologram.create(this.value, settings.getHologramOffset().calc(location));
         }
 

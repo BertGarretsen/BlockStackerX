@@ -6,7 +6,7 @@
 
     <groupId>me.epicgodmc</groupId>
     <artifactId>blockstackerx</artifactId>
-    <version>2.0</version>
+    <version>2.4.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Blockstackerx</name>
     <description>Block Stacking plugin for skyblock</description>
@@ -109,7 +109,7 @@
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
+            <artifactId>spigot-api</artifactId>
             <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
@@ -121,7 +121,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.20</version>
+            <version>1.18.22</version>
         </dependency>
         <dependency>
             <groupId>world.bentobox</groupId>
