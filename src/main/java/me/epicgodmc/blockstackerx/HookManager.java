@@ -70,8 +70,8 @@ public class HookManager {
         return output;
     }
 
-    public StackerHologram getNewHologram(String format) {
-        return this.hologramProviderType.getHologram(format);
+    public StackerHologram getNewHologram(String format, StackerBlock block) {
+        return this.hologramProviderType.getProvider().get(format, block);
     }
 
 
